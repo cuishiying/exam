@@ -43,7 +43,7 @@
 
             <!--<h2 class="sub-header">Section title</h2>-->
             <div class="table-responsive">
-                <a class="btn btn-primary" data-toggle="modal" data-target="#addModal">新增</a>
+                <a class="btn btn-primary add" data-toggle="modal" data-target="#addModal">新增</a>
                 <button type="button" class="btn btn-success import">导入</button>
                 <form id="uploadForm" enctype="multipart/form-data" method="post">
                     <input id="upfile" type="file" name="upfile" style="display: none">
@@ -65,9 +65,9 @@
                         <td th:text="${question.workType}"></td>
                         <td th:text="${question.score}"></td>
                         <td>
-                            <a class="btn btn-sm btn-success">查看</a>
-                            <a class="btn btn-sm btn-success">修改</a>
-                            <a class="btn btn-sm btn-danger">删除</a>
+                            <a class="btn btn-sm btn-success detail" th:value="${question.id}" data-toggle="modal" data-target="#addModal">查看</a>
+                            <a class="btn btn-sm btn-success update" th:value="${question.id}" data-toggle="modal" data-target="#addModal">修改</a>
+                            <a class="btn btn-sm btn-danger delete" th:value="${question.id}">删除</a>
                         </td>
                     </tr>
                     </tbody>
@@ -76,7 +76,7 @@
                 <!--分页-->
                 <nav th:replace="common/page::paging"></nav>
 
-                <!-- 模态框（Modal） -->
+                <!-- add模态框（Modal） -->
                 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false" >
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -90,53 +90,123 @@
                             </div>
                             <div class="modal-body">
                                 <form class="form-horizontal" role="form">
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">
-                                            题干
-                                        </label>
-                                        <div class="col-sm-7">
-                                            <input type="text" class="form-control" placeholder="" id="title">
+                                    <fieldset>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">
+                                                题干
+                                            </label>
+                                            <div class="col-sm-7">
+                                                <input type="text" class="form-control" placeholder="" id="title">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">
-                                            题型
-                                        </label>
-                                        <div class="col-sm-7">
-                                            <select class="form-control" id="typeId">
-                                                <option th:each="type:${types.content}" th:value="${type.id}" th:text="${type.value}">1</option>
-                                            </select>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">
+                                                题型
+                                            </label>
+                                            <div class="col-sm-7">
+                                                <select class="form-control" id="typeId">
+                                                    <option th:each="type:${types.content}" th:value="${type.id}" th:text="${type.value}">1</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">
-                                            工种
-                                        </label>
-                                        <div class="col-sm-7">
-                                            <select class="form-control" id="workType">
-                                                <option>1</option>
-                                                <option>2</option>
-                                                <option>3</option>
-                                                <option>4</option>
-                                                <option>5</option>
-                                            </select>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">
+                                                工种
+                                            </label>
+                                            <div class="col-sm-7">
+                                                <select class="form-control" id="workType">
+                                                    <option>1</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                    <option>5</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-sm-3 control-label">
-                                            分值
-                                        </label>
-                                        <div class="col-sm-7">
-                                            <input type="text" class="form-control" placeholder="" id="score">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">
+                                                分值
+                                            </label>
+                                            <div class="col-sm-7">
+                                                <input type="text" class="form-control" placeholder="" id="score">
+                                            </div>
                                         </div>
-                                    </div>
-
+                                    </fieldset>
                                 </form>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭
                                 </button>
                                 <button type="button" class="btn btn-primary save">
+                                    保存
+                                </button>
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal -->
+                </div>
+                <!-- show模态框（Modal） -->
+                <div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="myShowModalLabel" aria-hidden="true" data-backdrop="false" >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    &times;
+                                </button>
+                                <h4 class="modal-title" id="myShowModalLabel">
+                                    查看考题
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form-horizontal" role="form">
+                                    <fieldset disabled>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">
+                                                题干
+                                            </label>
+                                            <div class="col-sm-7">
+                                                <input type="text" class="form-control" placeholder="" id="title_show">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">
+                                                题型
+                                            </label>
+                                            <div class="col-sm-7">
+                                                <select class="form-control" id="typeId_show">
+                                                    <option th:each="type:${types.content}" th:value="${type.id}" th:text="${type.value}">1</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">
+                                                工种
+                                            </label>
+                                            <div class="col-sm-7">
+                                                <select class="form-control" id="workType_show">
+                                                    <option>1</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                    <option>5</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">
+                                                分值
+                                            </label>
+                                            <div class="col-sm-7">
+                                                <input type="text" class="form-control" placeholder="" id="score_show">
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                                </button>
+                                <button type="button" class="btn btn-primary save_update">
                                     保存
                                 </button>
                             </div>
@@ -170,6 +240,9 @@
    //新建试题
     $(".save").click(function () {
         var question = {};
+        if($(".modal-dialog").attr("value")){
+            question.id = $(".modal-dialog").attr("value");
+        }
         question.title = $("#title").val();
         question.score = $("#score").val();
         question.typeId = $("#typeId").val();
@@ -192,6 +265,49 @@
         var flag = true;
         return flag;
     }
+
+    //删除试题
+    $(".delete").click(function () {
+        ajaxUtils.postParams(ctx+"delete/"+$(this).attr("value"),"",function (e) {
+            if(e.success){
+                history.go(0);
+            }
+        })
+    })
+
+    //添加试题
+    $(".add").click(function () {
+        $("fieldset").removeAttr("disabled");
+        $("#title").val("");
+        $("#typeId").val("");
+        $("#workType").val("");
+        $("#score").val("");
+    });
+    //查看详情
+    $(".detail").click(function () {
+        $('fieldset').attr("disabled",true);
+        ajaxUtils.getData(ctx + "detail/"+$(this).attr("value"),function (e) {
+            if(e.success){
+               $("#title").val(e.data.title);
+               $("#typeId").val(e.data.typeId);
+               $("#workType").val(e.data.workType);
+               $("#score").val(e.data.score);
+            }
+        })
+    })
+    //修改试题
+    $(".update").click(function () {
+        $("fieldset").removeAttr("disabled");
+        $(".modal-dialog").attr('value',$(this).attr("value"));
+        ajaxUtils.getData(ctx + "detail/"+$(this).attr("value"),function (e) {
+            if(e.success){
+                $("#title").val(e.data.title);
+                $("#typeId").val(e.data.typeId);
+                $("#workType").val(e.data.workType);
+                $("#score").val(e.data.score);
+            }
+        })
+    })
 
     //导入excel
     $(".import").bind("click",function (e) {

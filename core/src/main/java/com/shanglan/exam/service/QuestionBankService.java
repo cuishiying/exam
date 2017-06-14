@@ -59,6 +59,10 @@ public class QuestionBankService {
         questionBankRepository.save(question);
         return AjaxResponse.success();
     }
+    public AjaxResponse deleteQuestion(int id){
+        questionBankRepository.delete(id);
+        return AjaxResponse.success();
+    }
 
     /**
      * 获取题库
@@ -68,5 +72,10 @@ public class QuestionBankService {
     public Page<Question> getQuestionBank(Pageable pageable){
         Page<Question> page = questionBankRepository.findAll(pageable);
         return page;
+    }
+
+    public Question findById(int id){
+        Question question = questionBankRepository.findOne(id);
+        return question;
     }
 }

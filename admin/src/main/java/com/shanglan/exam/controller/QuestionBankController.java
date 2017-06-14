@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -52,6 +49,18 @@ public class QuestionBankController {
     public AjaxResponse addQuestion(@RequestBody Question question, HttpServletRequest request){
         AjaxResponse ajaxResponse = questionBankService.addQuestion(question);
         return ajaxResponse;
+    }
+
+    @RequestMapping(path = "/delete/{id}", method = RequestMethod.POST)
+    public AjaxResponse deleteQuestion(@PathVariable Integer id, HttpServletRequest request){
+        AjaxResponse ajaxResponse = questionBankService.deleteQuestion(id);
+        return ajaxResponse;
+    }
+
+    @RequestMapping(path = "/detail/{id}",method = RequestMethod.GET)
+    public AjaxResponse questionDetail(@PathVariable Integer id){
+        Question question = questionBankService.findById(id);
+        return AjaxResponse.success(question);
     }
 
     @RequestMapping(path = "/importExcel", method = RequestMethod.POST)
