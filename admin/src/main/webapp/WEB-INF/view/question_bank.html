@@ -43,7 +43,7 @@
 
             <!--<h2 class="sub-header">Section title</h2>-->
             <div class="table-responsive">
-                <a class="btn btn-primary" th:href="@{/add}">新增</a>
+                <a class="btn btn-primary" data-toggle="modal" data-target="#addModal">新增</a>
                 <button type="button" class="btn btn-success import">导入</button>
                 <form id="uploadForm" enctype="multipart/form-data" method="post">
                     <input id="upfile" type="file" name="upfile" style="display: none">
@@ -60,10 +60,10 @@
                     </thead>
                     <tbody>
                     <tr class="text-center" th:each="question:${page.content}">
-                        <td th:text="${question.title}">zhangsan</td>
-                        <td th:text="${question.typeId}">张三</td>
-                        <td th:text="${question.title}">男</td>
-                        <td th:text="${question.score}">1990-03-05</td>
+                        <td th:text="${question.title}"></td>
+                        <td th:text="${question.questionType?.value}"></td>
+                        <td th:text="${question.workType}"></td>
+                        <td th:text="${question.score}"></td>
                         <td>
                             <a class="btn btn-sm btn-success">查看</a>
                             <a class="btn btn-sm btn-success">修改</a>
@@ -72,6 +72,77 @@
                     </tr>
                     </tbody>
                 </table>
+
+                <!--分页-->
+                <nav th:replace="common/page::paging"></nav>
+
+                <!-- 模态框（Modal） -->
+                <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="false" >
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    &times;
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel">
+                                    添加考题
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form-horizontal" role="form">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">
+                                            题干
+                                        </label>
+                                        <div class="col-sm-7">
+                                            <input type="text" class="form-control" placeholder="" id="title">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">
+                                            题型
+                                        </label>
+                                        <div class="col-sm-7">
+                                            <select class="form-control" id="typeId">
+                                                <option th:each="type:${types.content}" th:value="${type.id}" th:text="${type.value}">1</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">
+                                            工种
+                                        </label>
+                                        <div class="col-sm-7">
+                                            <select class="form-control" id="workType">
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                                <option>5</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">
+                                            分值
+                                        </label>
+                                        <div class="col-sm-7">
+                                            <input type="text" class="form-control" placeholder="" id="score">
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                                </button>
+                                <button type="button" class="btn btn-primary save">
+                                    保存
+                                </button>
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal -->
+                </div>
             </div>
         </div>
     </div>
@@ -89,9 +160,38 @@
 <script th:src="@{/static/js/ie10-viewport-bug-workaround.js}"></script>
 <script th:src="@{/static/js/global.js}"></script>
 <script th:src="@{/static/js/jquery.form.js}"></script>
+<script th:src="@{/static/utils/httpUtils.js}"></script>
+
+
 <script type="text/javascript" th:inline="javascript">
 
     var ctx = /*[[@{/}]]*/;
+
+   //新建试题
+    $(".save").click(function () {
+        var question = {};
+        question.title = $("#title").val();
+        question.score = $("#score").val();
+        question.typeId = $("#typeId").val();
+        question.workType = $("#workType").val();
+        var isValidate = validateQuestion(question);
+        if (!isValidate) return;
+
+        ajaxUtils.postJson(ctx + "add",question,function (e) {
+            if(e.success){
+                $('#addModal').modal('hide')
+                history.go(0)
+            }else{
+                alert(e.message);
+            }
+        })
+    });
+    
+    //校验表单
+    function  validateQuestion(question) {
+        var flag = true;
+        return flag;
+    }
 
     //导入excel
     $(".import").bind("click",function (e) {

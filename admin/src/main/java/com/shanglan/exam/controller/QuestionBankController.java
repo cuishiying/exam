@@ -2,11 +2,14 @@ package com.shanglan.exam.controller;
 
 import com.shanglan.exam.base.AjaxResponse;
 import com.shanglan.exam.entity.Question;
+import com.shanglan.exam.entity.QuestionType;
 import com.shanglan.exam.service.QuestionBankService;
+import com.shanglan.exam.service.QuestionTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +30,8 @@ public class QuestionBankController {
 
     @Autowired
     private QuestionBankService questionBankService;
+    @Autowired
+    private QuestionTypeService questionTypeService;
 
     /**
      * 题库中心
@@ -37,14 +42,16 @@ public class QuestionBankController {
     public ModelAndView index(@PageableDefault Pageable pageable){
         ModelAndView model = new ModelAndView("question_bank");
         Page<Question> questionBank = questionBankService.getQuestionBank(pageable);
+        Page<QuestionType> types = questionTypeService.findAll(null);
         model.addObject("page",questionBank);
+        model.addObject("types",types);
         return model;
     }
 
-    @RequestMapping(path = "/add", method = RequestMethod.GET)
-    public ModelAndView addQuestion(){
-        ModelAndView model = new ModelAndView("add_question");
-        return model;
+    @RequestMapping(path = "/add", method = RequestMethod.POST)
+    public AjaxResponse addQuestion(@RequestBody Question question, HttpServletRequest request){
+        AjaxResponse ajaxResponse = questionBankService.addQuestion(question);
+        return ajaxResponse;
     }
 
     @RequestMapping(path = "/importExcel", method = RequestMethod.POST)

@@ -18,6 +18,7 @@ public class Question extends BaseEntity{
     private String title;//题干
     private String addtime;//添加时间
     private String workType;//工种
+    private QuestionType questionType;
 
 
     public int getTypeId() {
@@ -74,5 +75,13 @@ public class Question extends BaseEntity{
 
     public void setWorkType(String workType) {
         this.workType = workType;
+    }
+
+    public QuestionType getQuestionType() {
+        return questionType;
+    }
+
+    public void setQuestionType(QuestionType questionType) {
+        this.questionType = questionType;
     }
 }
