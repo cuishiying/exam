@@ -38,38 +38,39 @@
     <div class="row">
         <nav th:replace="common/fragment :: nav-menu"></nav>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <h2 class="page-header">题库中心</h2>
+            <h2 class="page-header">试卷列表</h2>
 
 
             <!--<h2 class="sub-header">Section title</h2>-->
             <div class="table-responsive">
-                <a class="btn btn-primary add" data-toggle="modal" data-target="#addModal">新增</a>
-                <button type="button" class="btn btn-success import">导入</button>
+                <a class="btn btn-primary add" th:href="@{/randomtestpaper/add}">添加</a>
                 <form id="uploadForm" enctype="multipart/form-data" method="post">
                     <input id="upfile" type="file" name="upfile" style="display: none">
                 </form>
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th class="text-center">题干</th>
-                        <th class="text-center">题型</th>
-                        <th class="text-center">工种</th>
-                        <th class="text-center">分值</th>
+                        <th class="text-center">试卷类型</th>
+                        <th class="text-center">试卷名称</th>
+                        <th class="text-center">创建时间</th>
+                        <th class="text-center">参考部门</th>
+                        <th class="text-center">考试时长</th>
+                        <th class="text-center">参考部门</th>
                         <th class="text-center">操作</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="text-center" th:each="question:${page.content}">
-                        <td th:text="${question.title}"></td>
-                        <td th:text="${question.questionType?.value}"></td>
-                        <td th:text="${question.workType}"></td>
-                        <td th:text="${question.score}"></td>
-                        <td>
-                            <a class="btn btn-sm btn-success detail" th:value="${question.id}" data-toggle="modal" data-target="#addModal">查看</a>
-                            <a class="btn btn-sm btn-success update" th:value="${question.id}" data-toggle="modal" data-target="#addModal">修改</a>
-                            <a class="btn btn-sm btn-danger delete" th:value="${question.id}">删除</a>
-                        </td>
-                    </tr>
+                    <!--<tr class="text-center" th:each="question:${page.content}">-->
+                        <!--<td th:text="${question.title}"></td>-->
+                        <!--<td th:text="${question.questionType?.value}"></td>-->
+                        <!--<td th:text="${question.workType}"></td>-->
+                        <!--<td th:text="${question.score}"></td>-->
+                        <!--<td>-->
+                            <!--<a class="btn btn-sm btn-success detail" th:value="${question.id}" data-toggle="modal" data-target="#addModal">查看</a>-->
+                            <!--<a class="btn btn-sm btn-success update" th:value="${question.id}" data-toggle="modal" data-target="#addModal">修改</a>-->
+                            <!--<a class="btn btn-sm btn-danger delete" th:value="${question.id}">删除</a>-->
+                        <!--</td>-->
+                    <!--</tr>-->
                     </tbody>
                 </table>
 
@@ -105,7 +106,7 @@
                                             </label>
                                             <div class="col-sm-7">
                                                 <select class="form-control" id="typeId">
-                                                    <option th:each="type:${types.content}" th:value="${type.id}" th:text="${type.value}">1</option>
+                                                    <!--<option th:each="type:${types.content}" th:value="${type.id}" th:text="${type.value}">1</option>-->
                                                 </select>
                                             </div>
                                         </div>
@@ -181,7 +182,7 @@
         var isValidate = validateQuestion(question);
         if (!isValidate) return;
 
-        ajaxUtils.postJson(ctx + "question/add",question,function (e) {
+        ajaxUtils.postJson(ctx + "add",question,function (e) {
             if(e.success){
                 $('#addModal').modal('hide')
                 history.go(0)
@@ -199,7 +200,7 @@
 
     //删除试题
     $(".delete").click(function () {
-        ajaxUtils.postParams(ctx+"question/delete/"+$(this).attr("value"),"",function (e) {
+        ajaxUtils.postParams(ctx+"delete/"+$(this).attr("value"),"",function (e) {
             if(e.success){
                 history.go(0);
             }
@@ -217,7 +218,7 @@
     //查看详情
     $(".detail").click(function () {
         $('fieldset').attr("disabled",true);
-        ajaxUtils.getData(ctx + "question/detail/"+$(this).attr("value"),function (e) {
+        ajaxUtils.getData(ctx + "detail/"+$(this).attr("value"),function (e) {
             if(e.success){
                $("#title").val(e.data.title);
                $("#typeId").val(e.data.typeId);
@@ -230,7 +231,7 @@
     $(".update").click(function () {
         $("fieldset").removeAttr("disabled");
         $(".modal-dialog").attr('value',$(this).attr("value"));
-        ajaxUtils.getData(ctx + "question/detail/"+$(this).attr("value"),function (e) {
+        ajaxUtils.getData(ctx + "detail/"+$(this).attr("value"),function (e) {
             if(e.success){
                 $("#title").val(e.data.title);
                 $("#typeId").val(e.data.typeId);
@@ -240,47 +241,6 @@
         })
     })
 
-    //导入excel
-    $(".import").bind("click",function (e) {
-        $(this).next().find("input[type='file']").trigger("click").unbind("change").bind("change",function () {
-            if (!this.value) return;
-            if(checkData()){
-                $(this).parent().ajaxSubmit({
-                    url: ctx + "question/importExcel",
-                    type: "post",
-                    beforeSend: function() {
-                        console.log("准备上传");
-                    },
-                    success:function (result) {
-                        if (result.success){
-                            alert("上传成功");
-                            history.go(0);
-                        }else{
-                            alert(result.message);
-                        }
-                    }, error: function(error) {
-                        alert("出错啦");
-                    }
-                })
-            }
-
-        })
-    })
-    //JS校验form表单信息
-    function checkData(){
-        var fileDir = $("#upfile").val();
-        var suffix = fileDir.substr(fileDir.lastIndexOf("."));
-        console.log(suffix);
-        if("" == fileDir){
-            alert("选择需要导入的Excel文件！");
-            return false;
-        }
-        if(".XLS" != suffix && ".XLSX" != suffix && ".xls" != suffix && ".xlsx" != suffix){
-            alert("选择Excel格式的文件导入！");
-            return false;
-        }
-        return true;
-    }
 </script>
 </body>
 </html>

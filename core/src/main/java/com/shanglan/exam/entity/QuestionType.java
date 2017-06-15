@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 
 /**
  * Created by cuishiying on 2017/6/13.
+ * 试题类型（单选、多选..）
  */
 @Entity
 public class QuestionType extends BaseEntity{

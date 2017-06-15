@@ -22,8 +22,8 @@ import java.io.InputStream;
  * Created by cuishiying on 2017/6/13.
  */
 @RestController
-@RequestMapping("/question")
-public class QuestionBankController {
+@RequestMapping("/")
+public class IndexController {
 
     @Autowired
     private QuestionBankService questionBankService;
@@ -43,35 +43,5 @@ public class QuestionBankController {
         model.addObject("page",questionBank);
         model.addObject("types",types);
         return model;
-    }
-
-    @RequestMapping(path = "/add", method = RequestMethod.POST)
-    public AjaxResponse addQuestion(@RequestBody Question question, HttpServletRequest request){
-        AjaxResponse ajaxResponse = questionBankService.addQuestion(question);
-        return ajaxResponse;
-    }
-
-    @RequestMapping(path = "/delete/{id}", method = RequestMethod.POST)
-    public AjaxResponse deleteQuestion(@PathVariable Integer id, HttpServletRequest request){
-        AjaxResponse ajaxResponse = questionBankService.deleteQuestion(id);
-        return ajaxResponse;
-    }
-
-    @RequestMapping(path = "/detail/{id}",method = RequestMethod.GET)
-    public AjaxResponse questionDetail(@PathVariable Integer id){
-        Question question = questionBankService.findById(id);
-        return AjaxResponse.success(question);
-    }
-
-    @RequestMapping(path = "/importExcel", method = RequestMethod.POST)
-    public AjaxResponse<?> importExcel(HttpServletRequest request) throws Exception{
-        MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-        MultipartFile file = multipartRequest.getFile("upfile");
-        if(file.isEmpty()){
-            throw new Exception("文件不存在！");
-        }
-        InputStream in = file.getInputStream();
-        AjaxResponse ajaxResponse = questionBankService.importExcel(in, file);
-        return ajaxResponse;
     }
 }
