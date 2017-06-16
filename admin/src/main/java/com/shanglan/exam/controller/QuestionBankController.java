@@ -45,6 +45,12 @@ public class QuestionBankController {
         return model;
     }
 
+    @RequestMapping(path = "/add", method = RequestMethod.GET)
+    public ModelAndView addQuestion(){
+        ModelAndView model = new ModelAndView("question_add");
+        return model;
+    }
+
     @RequestMapping(path = "/add", method = RequestMethod.POST)
     public AjaxResponse addQuestion(@RequestBody Question question, HttpServletRequest request){
         AjaxResponse ajaxResponse = questionBankService.addQuestion(question);
