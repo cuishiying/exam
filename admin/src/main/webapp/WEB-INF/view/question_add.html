@@ -49,10 +49,8 @@
                             题型
                         </label>
                         <div class="col-sm-7">
-                            <select class="form-control" id="testPaperType">
-                                <option>练习题</option>
-                                <option>考试题</option>
-                                <option>每日考试</option>
+                            <select class="form-control" id="questionType">
+                                <option th:each="questionType:${questionTypes.content}" th:text="${questionType.value}" th:value="${questionType.value}">练习题</option>
                             </select>
                         </div>
                     </div>
@@ -61,7 +59,7 @@
                             试题
                         </label>
                         <div class="col-sm-7">
-                            <textarea  class="form-control" rows="5"></textarea>
+                            <textarea  class="form-control" rows="5" id="questionTitle"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
@@ -69,7 +67,7 @@
                             分值
                         </label>
                         <div class="col-sm-7">
-                            <input type="text" class="form-control" placeholder="">
+                            <input type="text" class="form-control" placeholder="" id="questionScore">
                         </div>
                     </div>
                     <div class="form-group">
@@ -77,10 +75,8 @@
                             工种
                         </label>
                         <div class="col-sm-7">
-                            <select class="form-control" id="">
-                                <option>练习题</option>
-                                <option>考试题</option>
-                                <option>每日考试</option>
+                            <select class="form-control" id="questionCategory">
+                                <option th:each="questionCategory:${questionCategories.content}" th:text="${questionCategory.name}" th:value="${questionCategory.name}">练习题</option>
                             </select>
                         </div>
                     </div>
@@ -116,8 +112,8 @@
 
                     <div class="form-group">
                         <div class="col-sm-10 text-center">
-                            <button type="submit" class="btn btn-success">保存</button>
-                            <button type="submit" class="btn btn-danger">取消</button>
+                            <button type="button" class="btn btn-success">保存</button>
+                            <button type="button" class="btn btn-danger" onclick="javascript:history.go(-1);">取消</button>
                         </div>
                     </div>
                 </form>
@@ -138,6 +134,7 @@
 <script th:src="@{/static/js/ie10-viewport-bug-workaround.js}"></script>
 <script th:src="@{/static/js/global.js}"></script>
 <script th:src="@{/static/js/jquery.form.js}"></script>
+<script th:src="@{/static/utils/httpUtils.js}"></script>
 <script type="text/javascript" th:inline="javascript">
 
     var ctx = /*[[@{/}]]*/;
@@ -152,6 +149,24 @@
         }else{
             $(this).parent().parent().remove();
         }
+    })
+    
+    //保存试题
+    $(".btn-success").click(function () {
+        var question = new Object();
+        question.title = $("#questionTitle").val();
+        question.score = $("#questionScore").val();
+        question.questionType = {id:0,value:$("#questionType").val()};
+        question.questionCategory = {id:0,name:$("#questionCategory").val()};
+        console.log(question);
+        ajaxUtils.postJson(ctx + "question/add",question,function (e) {
+            if(e.success){
+               window.location.href = ctx + "question";
+            }else{
+                alert(e.message);
+            }
+        })
+
     })
 </script>
 </body>

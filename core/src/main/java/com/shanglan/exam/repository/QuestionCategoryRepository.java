@@ -11,4 +11,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface QuestionCategoryRepository extends JpaRepository<QuestionCategory, Integer>,JpaSpecificationExecutor<QuestionCategory> {
 
     QuestionCategory findByName(String name);
+
 }

@@ -22,9 +22,7 @@ public class Question extends BaseEntity{
     @OneToMany(fetch= FetchType.EAGER, cascade= CascadeType.ALL, orphanRemoval=true)
     private List<Answer> answers;//答案
     private int score;//分值
-    @ManyToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST,
-            CascadeType.REFRESH }, optional = false)
-    @JoinColumn(name = "categoryId", nullable = false)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private QuestionCategory questionCategory;//试题类目
     private LocalDateTime addtime;//添加时间
 

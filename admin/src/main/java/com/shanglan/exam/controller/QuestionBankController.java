@@ -2,8 +2,10 @@ package com.shanglan.exam.controller;
 
 import com.shanglan.exam.base.AjaxResponse;
 import com.shanglan.exam.entity.Question;
+import com.shanglan.exam.entity.QuestionCategory;
 import com.shanglan.exam.entity.QuestionType;
 import com.shanglan.exam.service.QuestionBankService;
+import com.shanglan.exam.service.QuestionCategoryService;
 import com.shanglan.exam.service.QuestionTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,6 +31,8 @@ public class QuestionBankController {
     private QuestionBankService questionBankService;
     @Autowired
     private QuestionTypeService questionTypeService;
+    @Autowired
+    private QuestionCategoryService questionCategoryService;
 
     /**
      * 题库中心
@@ -48,6 +52,11 @@ public class QuestionBankController {
     @RequestMapping(path = "/add", method = RequestMethod.GET)
     public ModelAndView addQuestion(){
         ModelAndView model = new ModelAndView("question_add");
+        Page<QuestionType> questionTypes = questionTypeService.findAll(null);
+        Page<QuestionCategory> questionCategories = questionCategoryService.findAll(null);
+        model.addObject("questionTypes",questionTypes);
+        model.addObject("questionCategories",questionCategories);
+
         return model;
     }
 

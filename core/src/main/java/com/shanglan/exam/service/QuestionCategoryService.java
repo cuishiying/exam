@@ -1,8 +1,11 @@
 package com.shanglan.exam.service;
 
 import com.shanglan.exam.entity.QuestionCategory;
+import com.shanglan.exam.entity.QuestionType;
 import com.shanglan.exam.repository.QuestionCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +21,11 @@ public class QuestionCategoryService {
     public QuestionCategory findByName(String name){
         QuestionCategory questionCategory = questionCategoryRepository.findByName(name);
         return questionCategory;
+    }
+
+    public Page<QuestionCategory> findAll(Pageable pageable){
+        Page<QuestionCategory> page = questionCategoryRepository.findAll(pageable);
+        return page;
     }
 
 }

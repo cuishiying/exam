@@ -62,6 +62,8 @@ public class QuestionBankService {
 
     public AjaxResponse addQuestion(Question question){
         question.setAddtime(LocalDateTime.now());
+        question.setQuestionCategory(questionCategoryRepository.findByName(question.getQuestionCategory().getName()));
+        question.setQuestionType(questionTypeRepository.findByValue(question.getQuestionType().getValue()));
         questionBankRepository.save(question);
         return AjaxResponse.success();
     }
