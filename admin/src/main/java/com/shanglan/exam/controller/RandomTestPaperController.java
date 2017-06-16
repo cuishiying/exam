@@ -1,6 +1,6 @@
 package com.shanglan.exam.controller;
 
-import com.shanglan.exam.entity.RandomTestPaper;
+import com.shanglan.exam.entity.TestPaper;
 import com.shanglan.exam.service.RandomTestPaperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,7 +25,7 @@ public class RandomTestPaperController {
     @RequestMapping
     public ModelAndView testPaperListView(Pageable pageable){
         ModelAndView model = new ModelAndView("random_test_paper");
-        Page<RandomTestPaper> page = randomTestPaperService.findTestPapers(pageable);
+        Page<TestPaper> page = randomTestPaperService.findTestPapers(pageable);
         model.addObject("page",page);
         return model;
     }

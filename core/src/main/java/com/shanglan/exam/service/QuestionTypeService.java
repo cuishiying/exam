@@ -25,4 +25,9 @@ public class QuestionTypeService {
         return page;
     }
 
+    public QuestionType findByValue(String value){
+        QuestionType questionType = questionTypeRepository.findByValue(value);
+        return questionType;
+    }
+
 }

@@ -12,31 +12,23 @@ public class Answer extends BaseEntity{
 
 
     private static final long serialVersionUID = -764728170462458136L;
-    private String titleId;
-    private String answer;
-    private int status;//1正确答案;0错误答案
 
-    public String getTitleId() {
-        return titleId;
+    private String content; // 答案内容
+    private boolean correct; // 是否是正确答案
+
+    public String getContent() {
+        return content;
     }
 
-    public void setTitleId(String titleId) {
-        this.titleId = titleId;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public String getAnswer() {
-        return answer;
+    public boolean isCorrect() {
+        return correct;
     }
 
-    public void setAnswer(String answer) {
-        this.answer = answer;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
+    public void setCorrect(boolean correct) {
+        this.correct = correct;
     }
 }

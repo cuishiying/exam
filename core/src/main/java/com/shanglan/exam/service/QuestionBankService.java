@@ -5,6 +5,7 @@ import com.shanglan.exam.base.ExcelUtils;
 import com.shanglan.exam.entity.Question;
 import com.shanglan.exam.entity.QuestionType;
 import com.shanglan.exam.repository.QuestionBankRepository;
+import com.shanglan.exam.repository.QuestionCategoryRepository;
 import com.shanglan.exam.repository.QuestionTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +32,9 @@ public class QuestionBankService {
     @Autowired
     private QuestionTypeRepository questionTypeRepository;
 
+    @Autowired
+    private QuestionCategoryRepository questionCategoryRepository;
+
     /**
      * 批量导入试题
      * @param in
@@ -44,9 +49,11 @@ public class QuestionBankService {
         for (int i = 0; i < listob.size(); i++) {
             List<Object> lo = listob.get(i);
             Question question = new Question();
-            question.setTitle(String.valueOf(lo.get(0)));
-            question.setTypeId(Integer.parseInt(String.valueOf(lo.get(1))));
-            question.setScore(Integer.parseInt(String.valueOf(lo.get(3))));
+            question.setTitle(String.valueOf(lo.get(0)));//题目
+            question.setQuestionType(questionTypeRepository.findByValue(String.valueOf(lo.get(1))));//题型
+            question.setScore(Integer.parseInt(String.valueOf(lo.get(4))));
+            question.setQuestionCategory(questionCategoryRepository.findByName(String.valueOf(lo.get(5))));
+            question.setAddtime(LocalDateTime.now());
             questions.add(question);
         }
         questionBankRepository.save(questions);
@@ -54,8 +61,7 @@ public class QuestionBankService {
     }
 
     public AjaxResponse addQuestion(Question question){
-        QuestionType type = questionTypeRepository.findOne(question.getTypeId());
-        question.setQuestionType(type);
+        question.setAddtime(LocalDateTime.now());
         questionBankRepository.save(question);
         return AjaxResponse.success();
     }

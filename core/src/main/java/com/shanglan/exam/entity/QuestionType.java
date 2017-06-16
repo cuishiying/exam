@@ -6,13 +6,13 @@ import javax.persistence.Entity;
 
 /**
  * Created by cuishiying on 2017/6/13.
- * 试题类型（单选、多选..）
+ * 试题类型（单选、多选、判断、填空、主观）
  */
 @Entity
 public class QuestionType extends BaseEntity{
 
-    private static final long serialVersionUID = -7009699985575383529L;
 
+    private static final long serialVersionUID = -7009699985575383529L;
     private String value;
 
     public String getValue() {

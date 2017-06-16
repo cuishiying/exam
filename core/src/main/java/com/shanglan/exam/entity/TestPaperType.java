@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 /**
  * Created by cuishiying on 2017/6/15.
- * 试卷类型（考试题、练习题）
+ * 试卷类型（每日一考、试卷、练习）
  */
 @Entity
 public class TestPaperType extends BaseEntity{

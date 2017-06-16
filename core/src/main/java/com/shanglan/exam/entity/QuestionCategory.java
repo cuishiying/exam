@@ -2,17 +2,25 @@ package com.shanglan.exam.entity;
 
 import com.shanglan.exam.base.BaseEntity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Created by cuishiying on 2017/6/15.
- * 部门
+ * 试题类目（部门）
  */
 @Entity
-public class Dept extends BaseEntity{
-    private static final long serialVersionUID = 2402560884815241740L;
-    private String name;
+public class QuestionCategory extends BaseEntity{
+
+
+    private static final long serialVersionUID = 178277452268870741L;
+
+    @Column(unique = true, nullable = false)
+    private String name;// 类目名称
     private LocalDateTime createTime;
 
     public String getName() {

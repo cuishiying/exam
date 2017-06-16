@@ -51,7 +51,7 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th class="text-center">题干</th>
+                        <th class="text-center">题目</th>
                         <th class="text-center">题型</th>
                         <th class="text-center">工种</th>
                         <th class="text-center">分值</th>
@@ -62,7 +62,7 @@
                     <tr class="text-center" th:each="question:${page.content}">
                         <td th:text="${question.title}"></td>
                         <td th:text="${question.questionType?.value}"></td>
-                        <td th:text="${question.workType}"></td>
+                        <td th:text="${question.questionCategory?.name}"></td>
                         <td th:text="${question.score}"></td>
                         <td>
                             <a class="btn btn-sm btn-success detail" th:value="${question.id}" data-toggle="modal" data-target="#addModal">查看</a>
@@ -105,7 +105,7 @@
                                             </label>
                                             <div class="col-sm-7">
                                                 <select class="form-control" id="typeId">
-                                                    <option th:each="type:${types.content}" th:value="${type.id}" th:text="${type.value}">1</option>
+                                                    <!--<option th:each="type:${types.content}" th:value="${type.id}" th:text="${type.value}">1</option>-->
                                                 </select>
                                             </div>
                                         </div>

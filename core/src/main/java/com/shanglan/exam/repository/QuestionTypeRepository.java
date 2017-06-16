@@ -9,4 +9,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * Created by cuishiying on 2017/6/14.
  */
 public interface QuestionTypeRepository extends JpaRepository<QuestionType, Integer>,JpaSpecificationExecutor<QuestionType> {
+
+    QuestionType findByValue(String value);
 }
