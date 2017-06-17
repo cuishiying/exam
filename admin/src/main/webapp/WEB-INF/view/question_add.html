@@ -98,7 +98,7 @@
                                     <tr class="text-center" name="questionCompositionItem">
                                         <td>&nbsp;&nbsp;</td>
                                         <td><input class="form-control content"></td>
-                                        <td class="correct" value="false">错误</td>
+                                        <td class="correct"><input class="answer_status" type="radio" value="" hidden/><label>错误</label></td>
                                         <td>
                                             <button type="button" class="btn btn-sm btn-danger setCorrect">设为正确答案</button>
                                             <button type="button" class="btn btn-sm btn-danger delete">删除</button>
@@ -107,7 +107,7 @@
                                     <tr class="text-center hidden item_model" name="questionCompositionItem">
                                         <td>&nbsp;&nbsp;</td>
                                         <td><input class="form-control content"></td>
-                                        <td class="correct" value="false">错误</td>
+                                        <td class="correct"><input class="answer_status" type="radio" value="" hidden/><label>错误</label></td>
                                         <td>
                                             <button type="button" class="btn btn-sm btn-danger setCorrect">设为正确答案</button>
                                             <button type="button" class="btn btn-sm btn-danger delete">删除</button>
@@ -150,7 +150,7 @@
 
     //设置题目中的添加删除功能
     $(".add").on('click',function() {
-        $(".item_model").before("<tr class='text-center' name='questionCompositionItem'>"+$("#total").prev().html()+"</tr>");
+        $(".item_model").before("<tr class='text-center' name='questionCompositionItem'>"+$(".item_model").html()+"</tr>");
     })
     $(document).on('click','.delete',function() {
         if ($("tbody tr").size() == 2) {
@@ -161,10 +161,12 @@
     })
 
     //设置正确答案
-    $(".setCorrect").click(function () {
-//        console.log($(this).parent().prev());
-        $(this).parent().prev().html("正确");
-    });
+    $(document).on("click",".setCorrect",function (e) {
+
+        var checked = !$(this).parent().prev().find(":radio").prop("checked");
+        $(this).parent().prev().find(":radio").prop("checked",checked);
+        $(this).parent().prev().find("label").html(checked?"正确":"错误");
+    })
     //保存试题
     $(".save").click(function () {
         var question = new Object();
