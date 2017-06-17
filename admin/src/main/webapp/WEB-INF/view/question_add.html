@@ -97,14 +97,23 @@
                                 <tbody>
                                     <tr class="text-center" name="questionCompositionItem">
                                         <td>&nbsp;&nbsp;</td>
-                                        <td><input class="form-control"></td>
-                                        <td>错误</td>
+                                        <td><input class="form-control content"></td>
+                                        <td class="correct" value="false">错误</td>
                                         <td>
-                                            <button type="button" class="btn btn-sm btn-danger setRight">设为正确答案</button>
+                                            <button type="button" class="btn btn-sm btn-danger setCorrect">设为正确答案</button>
                                             <button type="button" class="btn btn-sm btn-danger delete">删除</button>
                                         </td>
                                     </tr>
-                                    <tr class="text-center" id="total"></tr>
+                                    <tr class="text-center hidden item_model" name="questionCompositionItem">
+                                        <td>&nbsp;&nbsp;</td>
+                                        <td><input class="form-control content"></td>
+                                        <td class="correct" value="false">错误</td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-danger setCorrect">设为正确答案</button>
+                                            <button type="button" class="btn btn-sm btn-danger delete">删除</button>
+                                        </td>
+                                    </tr>
+                                    <!--<tr class="text-center" id="total"></tr>-->
                                 </tbody>
                             </table>
                         </div>
@@ -112,7 +121,7 @@
 
                     <div class="form-group">
                         <div class="col-sm-10 text-center">
-                            <button type="button" class="btn btn-success">保存</button>
+                            <button type="button" class="btn btn-success save">保存</button>
                             <button type="button" class="btn btn-danger" onclick="javascript:history.go(-1);">取消</button>
                         </div>
                     </div>
@@ -141,7 +150,7 @@
 
     //设置题目中的添加删除功能
     $(".add").on('click',function() {
-        $("#total").before("<tr class='text-center' name='questionCompositionItem'>"+$("#total").prev().html()+"</tr>");
+        $(".item_model").before("<tr class='text-center' name='questionCompositionItem'>"+$("#total").prev().html()+"</tr>");
     })
     $(document).on('click','.delete',function() {
         if ($("tbody tr").size() == 2) {
@@ -150,23 +159,36 @@
             $(this).parent().parent().remove();
         }
     })
-    
+
+    //设置正确答案
+    $(".setCorrect").click(function () {
+//        console.log($(this).parent().prev());
+        $(this).parent().prev().html("正确");
+    });
     //保存试题
-    $(".btn-success").click(function () {
+    $(".save").click(function () {
         var question = new Object();
         question.title = $("#questionTitle").val();
         question.score = $("#questionScore").val();
         question.questionType = {id:0,value:$("#questionType").val()};
         question.questionCategory = {id:0,name:$("#questionCategory").val()};
-        console.log(question);
-        ajaxUtils.postJson(ctx + "question/add",question,function (e) {
-            if(e.success){
-                alert("试题保存成功");
-               window.location.href = ctx + "question";
-            }else{
-                alert(e.message);
-            }
+        question.answers = new Array();
+
+        $("tbody tr[name='questionCompositionItem']").each(function (e) {
+            var answer = new Object();
+            answer.content = $(this).find(".content").val();
+            answer.correct = $(this).find(".correct").attr("value");
+            question.answers.push(answer);
         })
+        console.log(question);
+//        ajaxUtils.postJson(ctx + "question/add",question,function (e) {
+//            if(e.success){
+//                alert("试题保存成功");
+//               window.location.href = ctx + "question";
+//            }else{
+//                alert(e.message);
+//            }
+//        })
 
     })
 </script>
