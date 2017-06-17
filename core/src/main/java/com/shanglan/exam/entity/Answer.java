@@ -13,8 +13,17 @@ public class Answer extends BaseEntity{
 
     private static final long serialVersionUID = -764728170462458136L;
 
+    private String keyTag; //ABC选项
     private String content; // 答案内容
     private boolean correct; // 是否是正确答案
+
+    public String getKeyTag() {
+        return keyTag;
+    }
+
+    public void setKeyTag(String keyTag) {
+        this.keyTag = keyTag;
+    }
 
     public String getContent() {
         return content;

@@ -64,8 +64,12 @@
                     <tr class="text-center" th:each="question:${page.content}">
                         <td th:text="${question.title}"></td>
                         <td th:text="${question.questionType?.value}"></td>
-                        <td>选项</td>
-                        <td>A</td>
+                        <td>
+                            <select class="form-control" id="answers">
+                                <option th:each="item:${question.answers}" th:text="${item.keyTag}+${item.content}">答案选项</option>
+                            </select>
+                        </td>
+                        <td th:text="${question.correctAnswer}">A</td>
                         <td th:text="${question.score}"></td>
                         <td th:text="${question.questionCategory?.name}"></td>
 

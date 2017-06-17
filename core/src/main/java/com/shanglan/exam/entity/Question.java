@@ -25,6 +25,7 @@ public class Question extends BaseEntity{
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private QuestionCategory questionCategory;//试题类目
     private LocalDateTime addtime;//添加时间
+    private String correctAnswer;//正确答案
 
     public int getqId() {
         return qId;
@@ -80,5 +81,13 @@ public class Question extends BaseEntity{
 
     public void setAddtime(LocalDateTime addtime) {
         this.addtime = addtime;
+    }
+
+    public String getCorrectAnswer() {
+        return correctAnswer;
+    }
+
+    public void setCorrectAnswer(String correctAnswer) {
+        this.correctAnswer = correctAnswer;
     }
 }
