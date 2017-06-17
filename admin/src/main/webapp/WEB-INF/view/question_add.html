@@ -95,7 +95,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="text-center" name="questionCompositionItem">
+                                    <tr class="text-center answer-item" name="questionCompositionItem">
                                         <td>&nbsp;&nbsp;</td>
                                         <td><input class="form-control content"></td>
                                         <td class="correct"><input class="answer_status" type="radio" value="" hidden/><label>错误</label></td>
@@ -150,7 +150,7 @@
 
     //设置题目中的添加删除功能
     $(".add").on('click',function() {
-        $(".item_model").before("<tr class='text-center' name='questionCompositionItem'>"+$(".item_model").html()+"</tr>");
+        $(".item_model").before("<tr class='text-center answer-item' name='questionCompositionItem'>"+$(".item_model").html()+"</tr>");
     })
     $(document).on('click','.delete',function() {
         if ($("tbody tr").size() == 2) {
@@ -162,10 +162,14 @@
 
     //设置正确答案
     $(document).on("click",".setCorrect",function (e) {
-
         var checked = !$(this).parent().prev().find(":radio").prop("checked");
         $(this).parent().prev().find(":radio").prop("checked",checked);
         $(this).parent().prev().find("label").html(checked?"正确":"错误");
+        if(checked){
+            $(this).removeClass("btn-danger").addClass("btn-success");
+        }else{
+            $(this).removeClass("btn-success").addClass("btn-danger");
+        }
     })
     //保存试题
     $(".save").click(function () {
@@ -175,22 +179,26 @@
         question.questionType = {id:0,value:$("#questionType").val()};
         question.questionCategory = {id:0,name:$("#questionCategory").val()};
         question.answers = new Array();
-
-        $("tbody tr[name='questionCompositionItem']").each(function (e) {
+        var correctAnswerArr = new Array("");
+        $(".answer_status:checked").each(function (index,e) {
+            correctAnswerArr.push($(this).parent().parent().find(".content").val());
+        });
+        question.correctAnswer = correctAnswerArr.join(",").substring(1);
+        $("tbody .answer-item").each(function (e) {
             var answer = new Object();
+            answer.keyTag = "";
             answer.content = $(this).find(".content").val();
-            answer.correct = $(this).find(".correct").attr("value");
+            answer.correct = $(this).find(".answer_status").prop("checked");
             question.answers.push(answer);
         })
-        console.log(question);
-//        ajaxUtils.postJson(ctx + "question/add",question,function (e) {
-//            if(e.success){
-//                alert("试题保存成功");
-//               window.location.href = ctx + "question";
-//            }else{
-//                alert(e.message);
-//            }
-//        })
+        ajaxUtils.postJson(ctx + "question/add",question,function (e) {
+            if(e.success){
+                alert("试题保存成功");
+               window.location.href = ctx + "question";
+            }else{
+                alert(e.message);
+            }
+        })
 
     })
 </script>
