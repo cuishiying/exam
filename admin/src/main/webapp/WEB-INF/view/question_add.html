@@ -161,6 +161,7 @@
         console.log(question);
         ajaxUtils.postJson(ctx + "question/add",question,function (e) {
             if(e.success){
+                alert("试题保存成功");
                window.location.href = ctx + "question";
             }else{
                 alert(e.message);
