@@ -48,40 +48,38 @@
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
-                    <tr>
-                        <th class="text-center" style="width: 10%">部门</th>
-                        <th class="text-center" style="width: 10%">单选</th>
-                        <th class="text-center" style="width: 10%">多选</th>
-                        <th class="text-center" style="width: 10%">判断</th>
-                        <th class="text-center" style="width: 10%">合计</th>
-                        <th class="text-center" style="width: 15%">开始时间</th>
-                        <th class="text-center" style="width: 15%">结束时间</th>
-                        <th class="text-center" style="width: 10%">类型</th>
-                    </tr>
+                        <tr>
+                            <th class="text-center" style="width: 10%">部门</th>
+                            <th class="text-center" style="width: 10%">单选数量</th>
+                            <th class="text-center" style="width: 10%">多选数量</th>
+                            <th class="text-center" style="width: 10%">判断数量</th>
+                            <th class="text-center" style="width: 10%">合计</th>
+                            <th class="text-center" style="width: 15%">开始时间</th>
+                            <th class="text-center" style="width: 15%">结束时间</th>
+                            <th class="text-center" style="width: 10%">类型</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr class="text-center" th:each="category:${allCategory}">
-                        <td th:text="${category.name}"></td>
-                        <td><input class="form-control"></td>
-                        <td><input class="form-control"></td>
-                        <td><input class="form-control"></td>
-                        <td>7</td>
-                        <td><input type="text" class="form-control date" placeholder="" id="startTime"></td>
-                        <td><input type="text" class="form-control date" placeholder="" id="endTime"></td>
-                        <td>
-                            <select class="form-control" id="">
-                                <option>随机题</option>
-                                <option>练习题</option>
-                                <option>考试题</option>
-                            </select>
-                        </td>
-                    </tr>
+                        <tr class="text-center item" th:each="rule:${rules}">
+                            <td th:text="${rule.questionCategory.name}" th:id="${rule.questionCategory.id}" class="questionCategory"></td>
+                            <td><input class="form-control countOfSingleChoice" value="0" th:value="${rule.countOfSingleChoice}"></td>
+                            <td><input class="form-control countOfMutipleChoice" value="0" th:value="${rule.countOfMutipleChoice}"></td>
+                            <td><input class="form-control" value="0"></td>
+                            <td>7</td>
+                            <td><input type="text" class="form-control date startTime" placeholder="" th:value="${rule.effectiveStartDate}"></td>
+                            <td><input type="text" class="form-control date endTime" placeholder="" th:value="${rule.effectiveEndDate}"></td>
+                            <td>
+                                <select class="form-control testPaperType">
+                                    <option th:each="paperType:${paperTypes}" th:text="${paperType.name}" th:id="${paperType.id}" th:selected="${paperType.name==rule.testPaperType.name}">随机题</option>
+                                </select>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 <div class="form-group">
                     <div class="col-sm-10 text-center">
-                        <button type="submit" class="btn btn-success">保存</button>
-                        <button type="submit" class="btn btn-danger">取消</button>
+                        <button type="button" class="btn btn-success btn-save">保存</button>
+                        <button type="button" class="btn btn-danger">取消</button>
                     </div>
                 </div>
             </div>
@@ -103,17 +101,45 @@
 <script th:src="@{/static/js/jquery.form.js}"></script>
 <script th:src="@{/static/js/bootstrap-datetimepicker.js}"></script>
 <script th:src="@{/static/js/bootstrap-datetimepicker.zh-CN.js}"></script>
+<script th:src="@{/static/utils/httpUtils.js}"></script>
+
 <script type="text/javascript" th:inline="javascript">
 
     var ctx = /*[[@{/}]]*/;
     $('.date').datetimepicker({
         language: 'zh-CN',//显示中文
-        format: 'yyyy-mm-dd hh:ii:ss',//显示格式
-        minView: "hour",
+        format: 'yyyy-mm-dd',//显示格式
+        minView: "month",
         initialDate: new Date(),//初始化当前日期
         autoclose: true,//选中自动关闭
         todayBtn: true//显示今日按钮
     })
+
+    $(".btn-save").click(function (e) {
+        var rules = new Array();
+        $("tbody .item").each(function (e) {
+            var questionCompositionItem = new Object();
+            questionCompositionItem.questionCategory = {"id":$(this).find(".questionCategory").attr("id"),"name":$(this).find(".questionCategory").text()};
+            questionCompositionItem.countOfSingleChoice = $(this).find(".countOfSingleChoice").val();
+            questionCompositionItem.countOfMutipleChoice = $(this).find(".countOfMutipleChoice").val();
+            questionCompositionItem.effectiveStartDate = $(this).find(".startTime").val();
+            questionCompositionItem.effectiveEndDate = $(this).find(".endTime").val();
+            questionCompositionItem.testPaperType = {"id":$(this).find("option:selected").attr("id"),name:$(this).find(".testPaperType").val()};
+            rules.push(questionCompositionItem);
+        })
+
+
+        ajaxUtils.postJson(ctx + "testpaperrule/save",rules,function (e) {
+            if(e.success){
+                alert("保存成功");
+                window.location.href = ctx + "question";
+            }else{
+                alert(e.message);
+            }
+        })
+    })
+
+
 </script>
 </body>
 </html>

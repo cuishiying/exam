@@ -21,7 +21,7 @@ public class QuestionCompositionItem extends BaseEntity {
 	private Integer countOfMutipleChoice;//多选数量
 	private LocalDate   effectiveStartDate;//有效起始时间
 	private LocalDate 	effectiveEndDate;//有效结束时间
-	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	private TestPaperType testPaperType;//试卷类型
 
 	public QuestionCategory getQuestionCategory() {
