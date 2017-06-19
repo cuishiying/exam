@@ -2,6 +2,7 @@ package com.shanglan.exam.service;
 
 import com.shanglan.exam.base.AjaxResponse;
 import com.shanglan.exam.base.ExcelUtils;
+import com.shanglan.exam.dto.QueryDTO;
 import com.shanglan.exam.entity.Answer;
 import com.shanglan.exam.entity.Question;
 import com.shanglan.exam.entity.QuestionCompositionItem;
@@ -10,14 +11,17 @@ import com.shanglan.exam.repository.QuestionBankRepository;
 import com.shanglan.exam.repository.QuestionCategoryRepository;
 import com.shanglan.exam.repository.QuestionTypeRepository;
 import com.shanglan.exam.repository.TestPaperRuleRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.criteria.Predicate;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -102,6 +106,13 @@ public class QuestionBankService {
         Page<Question> page = questionBankRepository.findAll(pageable);
         return page;
     }
+    public Page<Question> getQuestionBank(String keyword,Pageable pageable){
+        if(keyword==null){
+            keyword = "";
+        }
+        Page<Question> page = questionBankRepository.findAll("%"+keyword+"%", pageable);
+        return page;
+    }
 
     /**
      * 根据id获取试题
@@ -171,5 +182,28 @@ public class QuestionBankService {
             result.add(list.remove(random.nextInt(list.size())));
         }
         return result;
+    }
+
+    /**
+     * 多条件查询
+     * @param queryVo
+     * @return
+     */
+    private Specification<Question> getWhereClause(QueryDTO queryVo){
+        return (root, query, cb) -> {
+            List<Predicate> predicate = new ArrayList<>();
+
+            //关键词
+            if(queryVo!=null&& StringUtils.isNotBlank(queryVo.getKeyword())){
+                predicate.add(cb.or(cb.like(root.<String>get("title"), "%" + queryVo.getKeyword().trim() + "%"),
+                        cb.like(root.<String>get("correctAnswer"), "%" + queryVo.getKeyword().trim() + "%")));
+            }
+            //题型
+            if(queryVo!=null&&queryVo.getQuestionType()!=null){
+                Predicate ownerQuery = cb.equal(root.<Integer>get("questionType"), queryVo.getQuestionType());
+                predicate.add(ownerQuery);
+            }
+            return query.where(predicate.toArray(new Predicate[predicate.size()])).getRestriction();
+        };
     }
 }
