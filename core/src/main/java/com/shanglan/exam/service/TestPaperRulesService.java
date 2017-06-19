@@ -37,6 +37,7 @@ public class TestPaperRulesService {
 
     public AjaxResponse submitRules(List<QuestionCompositionItem> rules){
         rules.stream().forEach(e->{
+            e.setId(testPaperRuleRepository.findByQuestionCategory(e.getQuestionCategory()).getId());
             e.setQuestionCategory(questionCategoryRepository.findByName(e.getQuestionCategory().getName()));
             e.setTestPaperType(testPaperTypeRepository.findOne(e.getTestPaperType().getId()));
         });
