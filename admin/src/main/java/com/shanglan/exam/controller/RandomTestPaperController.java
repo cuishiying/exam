@@ -1,7 +1,9 @@
 package com.shanglan.exam.controller;
 
+import com.shanglan.exam.base.AjaxResponse;
+import com.shanglan.exam.entity.Question;
 import com.shanglan.exam.entity.TestPaper;
-import com.shanglan.exam.service.RandomTestPaperService;
+import com.shanglan.exam.service.QuestionBankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,30 +12,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
+
 /**
  * Created by cuishiying on 2017/6/15.
  * 试卷列表
  * 按题型随机生成试卷、试卷查看、修改、删除
  */
 @RestController
-@RequestMapping("/randomtestpaper")
+@RequestMapping("/test")
 public class RandomTestPaperController {
 
     @Autowired
-    private RandomTestPaperService randomTestPaperService;
+    private QuestionBankService questionBankService;
 
     @RequestMapping
-    public ModelAndView testPaperListView(Pageable pageable){
-        ModelAndView model = new ModelAndView("random_test_paper");
-        Page<TestPaper> page = randomTestPaperService.findTestPapers(pageable);
-        model.addObject("page",page);
-        return model;
-    }
-
-    @RequestMapping(path = "/add",method = RequestMethod.GET)
-    public ModelAndView addRandomTestPaperView(){
-        ModelAndView model = new ModelAndView("add_random_testpaper");
-        return model;
+    public AjaxResponse testPaperListView(Pageable pageable){
+        List<Question> questions = questionBankService.generateQuestionList(null);
+        return AjaxResponse.success(questions);
     }
 
 }
