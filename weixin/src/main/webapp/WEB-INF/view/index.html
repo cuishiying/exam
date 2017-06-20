@@ -81,6 +81,8 @@
 
     var ctx = /*[[@{/}]]*/;
     $(".submit").click(function () {
+        $(".has-error").prop("hidden",true);
+        $(".title").removeClass("text-danger");
         var paperData = [];//试卷
         var questions = $(".question-list").find(".item");
         $.each(questions, function(e) {
