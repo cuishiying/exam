@@ -3,6 +3,7 @@ package com.shanglan.exam.service;
 import com.shanglan.exam.base.AjaxResponse;
 import com.shanglan.exam.base.ExcelUtils;
 import com.shanglan.exam.dto.QueryDTO;
+import com.shanglan.exam.dto.QuestionDTO;
 import com.shanglan.exam.entity.Answer;
 import com.shanglan.exam.entity.Question;
 import com.shanglan.exam.entity.QuestionCompositionItem;
@@ -148,7 +149,7 @@ public class QuestionBankService {
      * 从试卷类目中随机选择试题
      * @return
      */
-    public List<Question> generateQuestionList(QuestionCompositionItem qci1){
+    public QuestionDTO generateQuestionList(QuestionCompositionItem qci1){
         QuestionCompositionItem qci = testPaperRuleRepository.findAll().get(0);
         //获得单选多选总数
         long oneCount = questionBankRepository.countByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("单选题"), qci.getQuestionCategory().getId());
@@ -165,7 +166,10 @@ public class QuestionBankService {
 
         List<Question> singleChoiceList = questionBankRepository.findAll(oneIds);
         List<Question> mutipleChoiceList = questionBankRepository.findAll(moreIds);
-        return singleChoiceList;
+        QuestionDTO questionDTO = new QuestionDTO();
+        questionDTO.setSingleChoiceList(singleChoiceList);
+        questionDTO.setMutipleChoiceList(mutipleChoiceList);
+        return questionDTO;
     }
 
     /**

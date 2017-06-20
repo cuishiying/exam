@@ -37,6 +37,10 @@ public class TestPaperRulesService {
 
     public AjaxResponse submitRules(List<QuestionCompositionItem> rules){
         rules.stream().forEach(e->{
+            if(e.getEffectiveStartDate().isAfter(e.getEffectiveEndDate())){
+                //开始时间大于结束时间
+                return;
+            }
             e.setId(testPaperRuleRepository.findByQuestionCategory(e.getQuestionCategory()).getId());
             e.setQuestionCategory(questionCategoryRepository.findByName(e.getQuestionCategory().getName()));
             e.setTestPaperType(testPaperTypeRepository.findOne(e.getTestPaperType().getId()));
