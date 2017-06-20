@@ -101,7 +101,7 @@
                 $.each(e.data,function (i,e) {
                     console.log($("div#"+e.questionId).html())
                     $("div#"+e.questionId).addClass("text-danger");
-                    $(".has-error").removeAttr("hidden");
+                    $("div#"+e.questionId).parent().find(".correctAnswer").removeAttr("hidden");
                 })
             }
         })
