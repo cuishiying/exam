@@ -5,6 +5,7 @@ import com.shanglan.exam.entity.QuestionType;
 
 /**
  * Created by cuishiying on 2017/6/19.
+ * 搜索
  */
 public class QueryDTO {
     private String keyword;

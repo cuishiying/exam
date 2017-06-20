@@ -36,22 +36,28 @@
         <ul class="list-group">
             <li class="list-group-item active">单选题</li>
             <li class="list-group-item item" th:each="question:${questions.singleChoiceList}">
-                <div class="title" th:text="${question.title}"></div>
-                <div class="radio" th:each="answer:${question.answers}">
+                <div class="title" th:text="${question.title}" th:id="${question.id}"></div>
+                <div class="radio answer-item" th:each="answer:${question.answers}">
                     <label>
                         <input type="radio" th:name="${question.id}" th:text="${answer.keyTag}+'、'+${answer.content}" th:id="${answer.keyTag}">
                     </label>
+                </div>
+                <div class="correctAnswer has-error" hidden="hidden">
+                    <label class="control-label" th:text="'正确答案:'+${question.correctAnswer}"></label>
                 </div>
             </li>
         </ul>
         <ul class="list-group">
             <li class="list-group-item active">多选题</li>
             <li class="list-group-item item" th:each="question:${questions.mutipleChoiceList}">
-                <div class="title" th:text="${question.title}"></div>
-                <div class="checkbox" th:each="answer:${question.answers}">
+                <div class="title" th:text="${question.title}"  th:id="${question.id}"></div>
+                <div class="checkbox answer-item" th:each="answer:${question.answers}">
                     <label>
                         <input type="checkbox" th:name="${question.id}" th:text="${answer.keyTag}+'、'+${answer.content}" th:id="${answer.keyTag}">
                     </label>
+                </div>
+                <div class="correctAnswer has-error" hidden="hidden">
+                    <label class="control-label" th:text="'正确答案:'+${question.correctAnswer}"></label>
                 </div>
             </li>
         </ul>
@@ -75,12 +81,28 @@
 
     var ctx = /*[[@{/}]]*/;
     $(".submit").click(function () {
-        var paperData = [];
+        var paperData = [];//试卷
         var questions = $(".question-list").find(".item");
         $.each(questions, function(e) {
-            var title = $(this).find(".title").html();
-            console.log(title);
+            var question = {};//试题
+            var answers = [];//答案列表
+            var id = $(this).find(".title").attr("id");
+            question.questionId = id;
+            $(this).find(".answer-item input:checked").each(function () {
+                answers.push($(this).attr("id"));
+            });
+            question.userAnswer = answers;
+            paperData.push(question);
         });
+        ajaxUtils.postJson(ctx + "examination/submit",paperData,function (e) {
+            if(e.success){
+                $.each(e.data,function (i,e) {
+                    console.log($("div#"+e.questionId).html())
+                    $("div#"+e.questionId).addClass("text-danger");
+                    $(".has-error").removeAttr("hidden");
+                })
+            }
+        })
     })
 
 

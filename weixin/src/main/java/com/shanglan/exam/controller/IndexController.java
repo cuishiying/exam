@@ -2,6 +2,7 @@ package com.shanglan.exam.controller;
 
 import com.shanglan.exam.base.AjaxResponse;
 import com.shanglan.exam.dto.QuestionDTO;
+import com.shanglan.exam.dto.UserAnswers;
 import com.shanglan.exam.entity.Question;
 import com.shanglan.exam.service.ExaminationService;
 import com.shanglan.exam.service.QuestionBankService;
@@ -27,7 +28,7 @@ public class IndexController {
     private ExaminationService examinationService;
 
     @RequestMapping
-    public ModelAndView testPaperListView(Pageable pageable){
+    public ModelAndView examPaper(Pageable pageable){
         ModelAndView model = new ModelAndView("index");
         QuestionDTO questionDTO = questionBankService.generateQuestionList(null);
         model.addObject("questions",questionDTO);
@@ -36,12 +37,8 @@ public class IndexController {
 
     @ResponseBody
     @RequestMapping(value = "/examination/submit", method = RequestMethod.POST)
-    public AjaxResponse cacheExamPage(@RequestBody List<Map<Integer, List<Map<Integer, Boolean>>>> cacheData,
-                                      Integer page, boolean isCache, HttpServletRequest request) {
-        Integer empId = (Integer) request.getSession().getAttribute("empId");
-        if (empId == null)
-            return AjaxResponse.fail("当前未登陆");
-        AjaxResponse result = examinationService.cacheExam();
+    public AjaxResponse cacheExamPage(@RequestBody List<UserAnswers> userAnswers,HttpServletRequest request) {
+        AjaxResponse result = examinationService.calculationScore(userAnswers);
         return result;
     }
 

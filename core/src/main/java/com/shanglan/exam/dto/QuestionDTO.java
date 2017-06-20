@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * Created by cuishiying on 2017/6/20.
+ * 用户随机获取到的试题
  */
 public class QuestionDTO {
     private List<Question> singleChoiceList;
