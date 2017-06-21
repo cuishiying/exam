@@ -14,6 +14,7 @@ import com.shanglan.exam.repository.QuestionTypeRepository;
 import com.shanglan.exam.repository.TestPaperRuleRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -48,6 +49,9 @@ public class QuestionBankService {
     @Autowired
     private TestPaperRuleRepository testPaperRuleRepository;
 
+    @Autowired
+    private Environment env;
+
     /**
      * 批量导入试题
      * @param in
@@ -56,6 +60,7 @@ public class QuestionBankService {
      * @throws Exception
      */
     public AjaxResponse importExcel(InputStream in, MultipartFile file) throws Exception {
+
         List<List<Object>> listob = ExcelUtils.getBankListByExcel(in,file.getOriginalFilename());
         List<Question> questions=new ArrayList<Question>();
 
@@ -102,7 +107,6 @@ public class QuestionBankService {
         question.getAnswers().addAll(q.getAnswers());
         question.setScore(q.getScore());
         question.setTitle(q.getTitle());
-//        questionBankRepository.save(question);
         return AjaxResponse.success();
     }
 
@@ -151,8 +155,9 @@ public class QuestionBankService {
      */
     private  List<Answer> handleAnswer(String answers,String correctAnswer){
 
+        String split = env.getProperty("excel.import.split");
         List<Answer> answerList = new ArrayList();
-        String[] items = answers.split(";");
+        String[] items = answers.split(split);
         for (String item:items) {
             Answer answer = new Answer();
             answer.setKeyTag(item.substring(0,1));

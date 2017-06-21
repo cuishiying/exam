@@ -144,6 +144,7 @@
 <script th:src="@{/static/js/global.js}"></script>
 <script th:src="@{/static/js/jquery.form.js}"></script>
 <script th:src="@{/static/utils/httpUtils.js}"></script>
+<script th:src="@{/static/utils/config.js}"></script>
 <script type="text/javascript" th:inline="javascript">
 
     var ctx = /*[[@{/}]]*/;
@@ -189,7 +190,7 @@
         $(".answer_status:checked").each(function (index,e) {
             correctAnswerArr.push($(this).parent().parent().find(".keyTag").html());
         });
-        question.correctAnswer = correctAnswerArr.join(",").substring(1);
+        question.correctAnswer = correctAnswerArr.join(config.splitStr).substring(1);
         $("tbody .answer-item").each(function (e) {
             var answer = new Object();
             answer.keyTag = $(this).find(".keyTag").html();
