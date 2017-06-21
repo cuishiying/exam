@@ -74,8 +74,8 @@
                         <td th:text="${question.questionCategory?.name}"></td>
 
                         <td>
-                            <a class="btn btn-sm btn-success detail" th:value="${question.id}" data-toggle="modal" data-target="#addModal">查看</a>
-                            <a class="btn btn-sm btn-success update" th:value="${question.id}" data-toggle="modal" data-target="#addModal">修改</a>
+                            <!--<a class="btn btn-sm btn-success detail" th:value="${question.id}" data-toggle="modal" data-target="#addModal">查看</a>-->
+                            <a class="btn btn-sm btn-success update" th:value="${question.id}" th:href="@{/question/edit/}+${question.id}">修改</a>
                             <a class="btn btn-sm btn-danger delete" th:value="${question.id}">删除</a>
                         </td>
                     </tr>
@@ -223,31 +223,31 @@
         $("#workType").val("");
         $("#score").val("");
     });
-    //查看详情
-    $(".detail").click(function () {
-        $('fieldset').attr("disabled",true);
-        ajaxUtils.getData(ctx + "question/detail/"+$(this).attr("value"),function (e) {
-            if(e.success){
-               $("#title").val(e.data.title);
-               $("#typeId").val(e.data.typeId);
-               $("#workType").val(e.data.workType);
-               $("#score").val(e.data.score);
-            }
-        })
-    })
-    //修改试题
-    $(".update").click(function () {
-        $("fieldset").removeAttr("disabled");
-        $(".modal-dialog").attr('value',$(this).attr("value"));
-        ajaxUtils.getData(ctx + "question/detail/"+$(this).attr("value"),function (e) {
-            if(e.success){
-                $("#title").val(e.data.title);
-                $("#typeId").val(e.data.typeId);
-                $("#workType").val(e.data.workType);
-                $("#score").val(e.data.score);
-            }
-        })
-    })
+//    //查看详情
+//    $(".detail").click(function () {
+//        $('fieldset').attr("disabled",true);
+//        ajaxUtils.getData(ctx + "question/detail/"+$(this).attr("value"),function (e) {
+//            if(e.success){
+//               $("#title").val(e.data.title);
+//               $("#typeId").val(e.data.typeId);
+//               $("#workType").val(e.data.workType);
+//               $("#score").val(e.data.score);
+//            }
+//        })
+//    })
+//    //修改试题
+//    $(".update").click(function () {
+//        $("fieldset").removeAttr("disabled");
+//        $(".modal-dialog").attr('value',$(this).attr("value"));
+//        ajaxUtils.getData(ctx + "question/detail/"+$(this).attr("value"),function (e) {
+//            if(e.success){
+//                $("#title").val(e.data.title);
+//                $("#typeId").val(e.data.typeId);
+//                $("#workType").val(e.data.workType);
+//                $("#score").val(e.data.score);
+//            }
+//        })
+//    })
 
     //导入excel
     $(".import").bind("click",function (e) {

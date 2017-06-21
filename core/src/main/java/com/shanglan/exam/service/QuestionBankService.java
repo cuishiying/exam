@@ -89,6 +89,24 @@ public class QuestionBankService {
     }
 
     /**
+     * 修改试题
+     * @param q
+     * @return
+     */
+    public AjaxResponse editQuestion(Integer id,Question q){
+        Question question = questionBankRepository.findOne(id);
+        question.setQuestionCategory(questionCategoryRepository.findByName(q.getQuestionCategory().getName()));
+        question.setQuestionType(questionTypeRepository.findByValue(q.getQuestionType().getValue()));
+        question.setCorrectAnswer(q.getCorrectAnswer());
+        question.getAnswers().clear();
+        question.getAnswers().addAll(q.getAnswers());
+        question.setScore(q.getScore());
+        question.setTitle(q.getTitle());
+//        questionBankRepository.save(question);
+        return AjaxResponse.success();
+    }
+
+    /**
      * 删除试题
      * @param id
      * @return

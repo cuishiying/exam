@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -78,6 +79,24 @@ public class QuestionBankController {
     public AjaxResponse questionDetail(@PathVariable Integer id){
         Question question = questionBankService.findById(id);
         return AjaxResponse.success(question);
+    }
+
+    @RequestMapping(path = "/edit/{id}",method = RequestMethod.GET)
+    public ModelAndView questionEditView(@PathVariable Integer id){
+        ModelAndView model = new ModelAndView("question_edit");
+        Question question = questionBankService.findById(id);
+        Page<QuestionType> questionTypes = questionTypeService.findAll(null);
+        Page<QuestionCategory> questionCategories = questionCategoryService.findAll(null);
+        model.addObject("questionTypes",questionTypes);
+        model.addObject("questionCategories",questionCategories);
+        model.addObject("question",question);
+        return model;
+    }
+
+    @RequestMapping(path = "/edit/{id}",method = RequestMethod.POST)
+    public AjaxResponse questionEdit(@PathVariable Integer id,@RequestBody Question question){
+        AjaxResponse ajaxResponse = questionBankService.editQuestion(id,question);
+        return ajaxResponse;
     }
 
     @RequestMapping(path = "/importExcel", method = RequestMethod.POST)
