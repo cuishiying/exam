@@ -176,14 +176,16 @@ public class QuestionBankService {
             throw new RuntimeException("数据错误，类目所需试题数大于类目总试题数");
         }
 
+        //随机出单选题
         List<Integer> questionId1 = questionBankRepository.findAllByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("单选题"), qci.getQuestionCategory().getId());
         List<Integer> oneIds = this.randomList(questionId1, qci.getCountOfSingleChoice());
-
-        List<Integer> questionId2 = questionBankRepository.findAllByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("多选题"), qci.getQuestionCategory().getId());
-        List<Integer> moreIds = this.randomList(questionId1, qci.getCountOfSingleChoice());
-
         List<Question> singleChoiceList = questionBankRepository.findAll(oneIds);
+
+        //随机出多选题
+        List<Integer> questionId2 = questionBankRepository.findAllByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("多选题"), qci.getQuestionCategory().getId());
+        List<Integer> moreIds = this.randomList(questionId2, qci.getCountOfMutipleChoice());
         List<Question> mutipleChoiceList = questionBankRepository.findAll(moreIds);
+
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setSingleChoiceList(singleChoiceList);
         questionDTO.setMutipleChoiceList(mutipleChoiceList);

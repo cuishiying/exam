@@ -27,6 +27,11 @@ public class IndexController {
     @Autowired
     private ExaminationService examinationService;
 
+    /**
+     * 考卷列表
+     * @param pageable
+     * @return
+     */
     @RequestMapping
     public ModelAndView examPaper(Pageable pageable){
         ModelAndView model = new ModelAndView("index");
@@ -35,10 +40,16 @@ public class IndexController {
         return model;
     }
 
+    /**
+     * 提交考卷
+     * @param userAnswers
+     * @param request
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/examination/submit", method = RequestMethod.POST)
-    public AjaxResponse cacheExamPage(@RequestBody List<UserAnswers> userAnswers,HttpServletRequest request) {
-        AjaxResponse result = examinationService.calculationScore(userAnswers);
+    public AjaxResponse submitExamPage(@RequestBody List<UserAnswers> userAnswers,HttpServletRequest request) {
+        AjaxResponse result = examinationService.calculationScore("",userAnswers);
         return result;
     }
 

@@ -98,11 +98,11 @@
         });
         ajaxUtils.postJson(ctx + "examination/submit",paperData,function (e) {
             if(e.success){
-                $.each(e.data,function (i,e) {
-                    console.log($("div#"+e.questionId).html())
+                $.each(e.data.errAnswers,function (i,e) {
                     $("div#"+e.questionId).addClass("text-danger");
                     $("div#"+e.questionId).parent().find(".correctAnswer").removeAttr("hidden");
                 })
+                alert("你本次考试得分为"+e.data.examRecord.score);
             }
         })
     })

@@ -3,6 +3,7 @@ package com.shanglan.exam.entity;
 import com.shanglan.exam.base.BaseEntity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -14,18 +15,27 @@ public class ExamRecord extends BaseEntity {
 
     private static final long serialVersionUID = 522708612562745572L;
 
+    private String examId; //考试id，唯一，避免多次考试
     private String accoutNumber;//帐号
     private String name;//姓名
     private String employeeId;//工号
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private QuestionCategory questionCategory;//类目
 
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private TestPaperType testPaperType;//试卷类型
     private Integer score;//得分
     private LocalDateTime examTime;//考试时间
     private boolean absence;//缺席，true缺席，false未缺席
+
+    public String getExamId() {
+        return examId;
+    }
+
+    public void setExamId(String examId) {
+        this.examId = examId;
+    }
 
     public String getAccoutNumber() {
         return accoutNumber;
