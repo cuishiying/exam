@@ -34,9 +34,15 @@ public class IndexController {
      */
     @RequestMapping
     public ModelAndView examPaper(Pageable pageable){
-        ModelAndView model = new ModelAndView("index");
-        QuestionDTO questionDTO = questionBankService.generateQuestionList(null);
-        model.addObject("questions",questionDTO);
+        ModelAndView model = null;
+        AjaxResponse ajaxResponse = questionBankService.generateQuestionList(null);
+        if(ajaxResponse.isSuccess()){
+            model = new ModelAndView("index");
+            model.addObject("questions",ajaxResponse.getData());
+        }else{
+            model = new ModelAndView("exam_status");
+            model.addObject("message",ajaxResponse.getMessage());
+        }
         return model;
     }
 

@@ -38,17 +38,19 @@ public class TestPaperRulesService {
     private TestPaperTypeRepository testPaperTypeRepository;
 
     public AjaxResponse submitRules(List<QuestionCompositionItem> rules){
-        rules.stream().forEach(e->{
+
+        for (QuestionCompositionItem e:rules) {
             if(e.getEffectiveStartDate().isAfter(e.getEffectiveEndDate())){
                 //开始时间大于结束时间
-                return;
+                return AjaxResponse.fail("考试开始时间不得小于结束时间");
             }
             if(null!=testPaperRuleRepository.findByQuestionCategory(e.getQuestionCategory())){
                 e.setId(testPaperRuleRepository.findByQuestionCategory(e.getQuestionCategory()).getId());
                 e.setQuestionCategory(questionCategoryRepository.findByName(e.getQuestionCategory().getName()));
                 e.setTestPaperType(testPaperTypeRepository.findOne(e.getTestPaperType().getId()));
             }
-        });
+        }
+
         testPaperRuleRepository.save(rules);
         return AjaxResponse.success();
     }

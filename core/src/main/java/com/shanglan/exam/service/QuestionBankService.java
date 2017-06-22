@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.criteria.Predicate;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -206,30 +207,41 @@ public class QuestionBankService {
      * 从试卷类目中随机选择试题
      * @return
      */
-    public QuestionDTO generateQuestionList(QuestionCompositionItem qci1){
+    public AjaxResponse generateQuestionList(QuestionCompositionItem qci1){
         //todo
         QuestionCompositionItem qci = testPaperRuleRepository.findAll().get(0);
-        //获得单选多选总数
-        long oneCount = questionBankRepository.countByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("单选题"), qci.getQuestionCategory().getId());
-        long moreCount = questionBankRepository.countByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("多选题"), qci.getQuestionCategory().getId());
-        if (qci.getCountOfSingleChoice() > oneCount || qci.getCountOfMutipleChoice() > moreCount) {
-            throw new RuntimeException("数据错误，类目所需试题数大于类目总试题数");
+
+        if(LocalTime.now().isBefore(qci.getEffectiveStartDate())){
+            //考试未开始
+            return AjaxResponse.fail("考试未开始");
+        }else if(LocalTime.now().isBefore(qci.getEffectiveEndDate())){
+            //开始正在进行
+
+            //获得单选多选总数
+            long oneCount = questionBankRepository.countByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("单选题"), qci.getQuestionCategory().getId());
+            long moreCount = questionBankRepository.countByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("多选题"), qci.getQuestionCategory().getId());
+            if (qci.getCountOfSingleChoice() > oneCount || qci.getCountOfMutipleChoice() > moreCount) {
+                throw new RuntimeException("数据错误，类目所需试题数大于类目总试题数");
+            }
+
+            //随机出单选题
+            List<Integer> questionId1 = questionBankRepository.findAllByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("单选题"), qci.getQuestionCategory().getId());
+            List<Integer> oneIds = this.randomList(questionId1, qci.getCountOfSingleChoice());
+            List<Question> singleChoiceList = questionBankRepository.findAll(oneIds);
+
+            //随机出多选题
+            List<Integer> questionId2 = questionBankRepository.findAllByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("多选题"), qci.getQuestionCategory().getId());
+            List<Integer> moreIds = this.randomList(questionId2, qci.getCountOfMutipleChoice());
+            List<Question> mutipleChoiceList = questionBankRepository.findAll(moreIds);
+
+            QuestionDTO questionDTO = new QuestionDTO();
+            questionDTO.setSingleChoiceList(singleChoiceList);
+            questionDTO.setMutipleChoiceList(mutipleChoiceList);
+            return AjaxResponse.success(questionDTO);
+        }else{
+            //开始已结束
+            return AjaxResponse.fail("开始已结束");
         }
-
-        //随机出单选题
-        List<Integer> questionId1 = questionBankRepository.findAllByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("单选题"), qci.getQuestionCategory().getId());
-        List<Integer> oneIds = this.randomList(questionId1, qci.getCountOfSingleChoice());
-        List<Question> singleChoiceList = questionBankRepository.findAll(oneIds);
-
-        //随机出多选题
-        List<Integer> questionId2 = questionBankRepository.findAllByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("多选题"), qci.getQuestionCategory().getId());
-        List<Integer> moreIds = this.randomList(questionId2, qci.getCountOfMutipleChoice());
-        List<Question> mutipleChoiceList = questionBankRepository.findAll(moreIds);
-
-        QuestionDTO questionDTO = new QuestionDTO();
-        questionDTO.setSingleChoiceList(singleChoiceList);
-        questionDTO.setMutipleChoiceList(mutipleChoiceList);
-        return questionDTO;
     }
 
     /**
