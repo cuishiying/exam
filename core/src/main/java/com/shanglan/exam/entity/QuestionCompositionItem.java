@@ -5,6 +5,7 @@ import com.shanglan.exam.base.BaseEntity;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 /**
  * 组卷规则
@@ -19,8 +20,8 @@ public class QuestionCompositionItem extends BaseEntity {
 	private QuestionCategory questionCategory;//试题类目、工种
 	private Integer countOfSingleChoice;//单选数量
 	private Integer countOfMutipleChoice;//多选数量
-	private LocalDate   effectiveStartDate;//有效起始时间
-	private LocalDate 	effectiveEndDate;//有效结束时间
+	private LocalTime effectiveStartDate;//有效起始时间
+	private LocalTime 	effectiveEndDate;//有效结束时间
 	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	private TestPaperType testPaperType;//试卷类型
 
@@ -48,19 +49,19 @@ public class QuestionCompositionItem extends BaseEntity {
 		this.countOfMutipleChoice = countOfMutipleChoice;
 	}
 
-	public LocalDate getEffectiveStartDate() {
+	public LocalTime getEffectiveStartDate() {
 		return effectiveStartDate;
 	}
 
-	public void setEffectiveStartDate(LocalDate effectiveStartDate) {
+	public void setEffectiveStartDate(LocalTime effectiveStartDate) {
 		this.effectiveStartDate = effectiveStartDate;
 	}
 
-	public LocalDate getEffectiveEndDate() {
+	public LocalTime getEffectiveEndDate() {
 		return effectiveEndDate;
 	}
 
-	public void setEffectiveEndDate(LocalDate effectiveEndDate) {
+	public void setEffectiveEndDate(LocalTime effectiveEndDate) {
 		this.effectiveEndDate = effectiveEndDate;
 	}
 

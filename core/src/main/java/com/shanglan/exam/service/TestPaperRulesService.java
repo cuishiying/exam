@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,29 +43,47 @@ public class TestPaperRulesService {
                 //开始时间大于结束时间
                 return;
             }
-            e.setId(testPaperRuleRepository.findByQuestionCategory(e.getQuestionCategory()).getId());
-            e.setQuestionCategory(questionCategoryRepository.findByName(e.getQuestionCategory().getName()));
-            e.setTestPaperType(testPaperTypeRepository.findOne(e.getTestPaperType().getId()));
+            if(null!=testPaperRuleRepository.findByQuestionCategory(e.getQuestionCategory())){
+                e.setId(testPaperRuleRepository.findByQuestionCategory(e.getQuestionCategory()).getId());
+                e.setQuestionCategory(questionCategoryRepository.findByName(e.getQuestionCategory().getName()));
+                e.setTestPaperType(testPaperTypeRepository.findOne(e.getTestPaperType().getId()));
+            }
         });
         testPaperRuleRepository.save(rules);
         return AjaxResponse.success();
     }
 
+    /**
+     * 获取所有部门组题规则，如果不存在则新建
+     * @return
+     */
     public List<QuestionCompositionItem> findAll(){
         List<QuestionCompositionItem> rules = testPaperRuleRepository.findAll();
-        if(rules.size()==0){
-            List<QuestionCategory> categoryList = questionCategoryRepository.findAll();
+        List<QuestionCategory> categoryList = questionCategoryRepository.findAll();
+
+        if(testPaperTypeRepository.findAll().size()==0){
+            TestPaperType tpt = new TestPaperType();
+            tpt.setName("每日一考");
+            testPaperTypeRepository.save(tpt);
+        }
+
+        if(rules.size()<categoryList.size()){
             categoryList.forEach(e->{
-                QuestionCompositionItem item = new QuestionCompositionItem();
-                item.setTestPaperType(testPaperTypeRepository.findAll().get(0));
-                item.setQuestionCategory(e);
-                item.setCountOfMutipleChoice(1);
-                item.setCountOfSingleChoice(1);
-                item.setEffectiveStartDate(LocalDate.now());
-                item.setEffectiveEndDate(LocalDate.now());
-                rules.add(item);
+                QuestionCompositionItem category = testPaperRuleRepository.findByQuestionCategory(e);
+                if(null==category){
+                    QuestionCompositionItem item = new QuestionCompositionItem();
+                    item.setTestPaperType(testPaperTypeRepository.findAll().get(0));
+                    item.setQuestionCategory(e);
+                    item.setCountOfMutipleChoice(1);
+                    item.setCountOfSingleChoice(1);
+                    item.setEffectiveStartDate(LocalTime.now());
+                    item.setEffectiveEndDate(LocalTime.now());
+                    rules.add(item);
+                }
             });
         }
+        testPaperRuleRepository.save(rules);
+
         return rules;
     }
 }

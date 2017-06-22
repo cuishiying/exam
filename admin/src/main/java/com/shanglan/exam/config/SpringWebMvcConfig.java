@@ -27,6 +27,7 @@ import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class SpringWebMvcConfig extends WebMvcConfigurerAdapter {
 
 	private static DateTimeFormatter LocalDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	private static DateTimeFormatter LocalDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	private static DateTimeFormatter LocalTimeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
 	@Override
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
@@ -59,6 +61,8 @@ public class SpringWebMvcConfig extends WebMvcConfigurerAdapter {
 				.deserializerByType(LocalDateTime.class, new LocalDateTimeDeserializer())
 				.serializerByType(LocalDate.class, new LocalDateSerializer())
 				.deserializerByType(LocalDate.class, new LocalDateDeserializer())
+				.serializerByType(LocalTime.class, new LocalTimeSerializer())
+				.deserializerByType(LocalTime.class, new LocalTimeDeserializer())
 				.featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 		converters.add(new MappingJackson2HttpMessageConverter(builder.build()));
 	}
@@ -132,6 +136,23 @@ public class SpringWebMvcConfig extends WebMvcConfigurerAdapter {
 		public LocalDate deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
 			System.out.println(jp.getText());
 			return LocalDate.parse(jp.getText(), LocalDateFormatter);
+		}
+	}
+	private static class LocalTimeSerializer extends JsonSerializer<LocalTime> {
+
+		@Override
+		public void serialize(LocalTime value, JsonGenerator gen, SerializerProvider serializerProvider)
+				throws IOException, JsonProcessingException {
+			gen.writeString(value.format(LocalTimeFormatter));
+		}
+	}
+
+	private static class LocalTimeDeserializer extends JsonDeserializer<LocalTime> {
+
+		@Override
+		public LocalTime deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+			System.out.println(jp.getText());
+			return LocalTime.parse(jp.getText(), LocalTimeFormatter);
 		}
 	}
 }

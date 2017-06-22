@@ -21,7 +21,6 @@ public class QuestionCategory extends BaseEntity{
 
     @Column(unique = true, nullable = false)
     private String name;// 类目名称
-    private LocalDateTime createTime;
 
     public String getName() {
         return name;
@@ -31,11 +30,4 @@ public class QuestionCategory extends BaseEntity{
         this.name = name;
     }
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
 }

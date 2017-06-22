@@ -4,10 +4,7 @@ import com.shanglan.exam.base.AjaxResponse;
 import com.shanglan.exam.base.ExcelUtils;
 import com.shanglan.exam.dto.QueryDTO;
 import com.shanglan.exam.dto.QuestionDTO;
-import com.shanglan.exam.entity.Answer;
-import com.shanglan.exam.entity.Question;
-import com.shanglan.exam.entity.QuestionCompositionItem;
-import com.shanglan.exam.entity.QuestionType;
+import com.shanglan.exam.entity.*;
 import com.shanglan.exam.repository.QuestionBankRepository;
 import com.shanglan.exam.repository.QuestionCategoryRepository;
 import com.shanglan.exam.repository.QuestionTypeRepository;
@@ -27,6 +24,7 @@ import javax.persistence.criteria.Predicate;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -62,6 +60,8 @@ public class QuestionBankService {
      */
     public AjaxResponse importExcel(InputStream in, MultipartFile file) throws Exception {
 
+        initQuestionType();
+
         List<List<Object>> listob = ExcelUtils.getBankListByExcel(in,file.getOriginalFilename());
         List<Question> questions=new ArrayList<Question>();
 
@@ -78,6 +78,11 @@ public class QuestionBankService {
             question.setAnswers(handleAnswer(String.valueOf(lo.get(2)),String.valueOf(lo.get(3))));//答案选项
             question.setCorrectAnswer(String.valueOf(lo.get(3)));//正确答案
             question.setScore(Integer.parseInt(String.valueOf(lo.get(4))));
+            if(null==questionCategoryRepository.findByName(String.valueOf(lo.get(5)))){
+                QuestionCategory questionCategory = new QuestionCategory();
+                questionCategory.setName(String.valueOf(lo.get(5)));
+                questionCategoryRepository.save(questionCategory);
+            }
             question.setQuestionCategory(questionCategoryRepository.findByName(String.valueOf(lo.get(5))));
             question.setAddtime(LocalDateTime.now());
             questions.add(question);
@@ -87,11 +92,28 @@ public class QuestionBankService {
     }
 
     /**
+     * 初始化数据库题型数据
+     */
+    private void initQuestionType() {
+        if(questionTypeRepository.findAll().size()==0){
+            List<String> initArr = new ArrayList(Arrays.asList("单选题", "多选题","判断题"));
+            List<QuestionType> qtList = new ArrayList<>();
+            for(String str:initArr){
+                QuestionType qt = new QuestionType();
+                qt.setValue(str);
+                qtList.add(qt);
+            }
+            questionTypeRepository.save(qtList);
+        }
+    }
+
+    /**
      * 单个添加试题
      * @param question
      * @return
      */
     public AjaxResponse addQuestion(Question question){
+        initQuestionType();
         if(question.getQuestionType().getValue().equals("单选题")&&question.getCorrectAnswer().length()>1){
             return AjaxResponse.fail("单选题正确答案不能为多个");
         }
@@ -185,6 +207,7 @@ public class QuestionBankService {
      * @return
      */
     public QuestionDTO generateQuestionList(QuestionCompositionItem qci1){
+        //todo
         QuestionCompositionItem qci = testPaperRuleRepository.findAll().get(0);
         //获得单选多选总数
         long oneCount = questionBankRepository.countByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("单选题"), qci.getQuestionCategory().getId());

@@ -14,7 +14,6 @@ public class TestPaperType extends BaseEntity{
 
     private static final long serialVersionUID = -8771391100100509322L;
     private String name;
-    private LocalDateTime createTime;
 
     public String getName() {
         return name;
@@ -24,11 +23,4 @@ public class TestPaperType extends BaseEntity{
         this.name = name;
     }
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
 }

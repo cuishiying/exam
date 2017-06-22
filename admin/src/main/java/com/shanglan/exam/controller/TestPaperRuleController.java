@@ -40,10 +40,10 @@ public class TestPaperRuleController {
      * @return
      */
     @RequestMapping
-    public ModelAndView addRandomTestPaperView(){
+    public ModelAndView testPaperRuleView(){
         ModelAndView model = new ModelAndView("testpaper_rule");
-        List<TestPaperType> paperTypes = testPaperTypeService.findAll();
         List<QuestionCompositionItem> rules = testPaperRulesService.findAll();
+        List<TestPaperType> paperTypes = testPaperTypeService.findAll();
         model.addObject("rules",rules);
         model.addObject("paperTypes",paperTypes);
         return model;

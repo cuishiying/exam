@@ -19,7 +19,7 @@
 
     <!-- Custom styles for this template -->
     <link th:href="@{/static/css/index.css}" rel="stylesheet">
-    <link th:href="@{/static/css/bootstrap-datetimepicker.min.css}" rel="stylesheet">
+    <link th:href="@{/static/css/jquery.datetimepicker.css}" rel="stylesheet">
 
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
@@ -62,12 +62,12 @@
                     <tbody>
                         <tr class="text-center item" th:each="rule:${rules}">
                             <td th:text="${rule.questionCategory.name}" th:id="${rule.questionCategory.id}" class="questionCategory"></td>
-                            <td><input class="form-control countOfSingleChoice" value="0" th:value="${rule.countOfSingleChoice}"></td>
-                            <td><input class="form-control countOfMutipleChoice" value="0" th:value="${rule.countOfMutipleChoice}"></td>
+                            <td><input class="form-control countOfSingleChoice" value="1" th:value="${rule.countOfSingleChoice}"></td>
+                            <td><input class="form-control countOfMutipleChoice" value="" th:value="${rule.countOfMutipleChoice}"></td>
                             <td><input class="form-control" value="0"></td>
                             <td>7</td>
-                            <td><input type="text" class="form-control date startTime" placeholder="" th:value="${rule.effectiveStartDate}"></td>
-                            <td><input type="text" class="form-control date endTime" placeholder="" th:value="${rule.effectiveEndDate}"></td>
+                            <td><input type="text" class="form-control date startTime" placeholder="" th:value="${#temporals.format(rule.effectiveStartDate,'HH:mm')}"></td>
+                            <td><input type="text" class="form-control date endTime" placeholder="" th:value="${#temporals.format(rule.effectiveEndDate,'HH:mm')}"></td>
                             <td>
                                 <select class="form-control testPaperType">
                                     <option th:each="paperType:${paperTypes}" th:text="${paperType.name}" th:id="${paperType.id}" th:selected="${paperType.name==rule.testPaperType.name}">随机题</option>
@@ -99,21 +99,19 @@
 <script th:src="@{/static/js/ie10-viewport-bug-workaround.js}"></script>
 <script th:src="@{/static/js/global.js}"></script>
 <script th:src="@{/static/js/jquery.form.js}"></script>
-<script th:src="@{/static/js/bootstrap-datetimepicker.js}"></script>
-<script th:src="@{/static/js/bootstrap-datetimepicker.zh-CN.js}"></script>
+<script th:src="@{/static/js/jquery.js}"></script>
+<script th:src="@{/static/js/jquery.datetimepicker.full.js}"></script>
 <script th:src="@{/static/utils/httpUtils.js}"></script>
 
 <script type="text/javascript" th:inline="javascript">
 
     var ctx = /*[[@{/}]]*/;
+
     $('.date').datetimepicker({
-        language: 'zh-CN',//显示中文
-        format: 'yyyy-mm-dd',//显示格式
-        minView: "month",
-        initialDate: new Date(),//初始化当前日期
-        autoclose: true,//选中自动关闭
-        todayBtn: true//显示今日按钮
-    })
+        datepicker:false,
+        format:'H:i',
+        step:5
+    });
 
     $(".btn-save").click(function (e) {
         var rules = new Array();
@@ -132,7 +130,7 @@
         ajaxUtils.postJson(ctx + "testpaperrule/save",rules,function (e) {
             if(e.success){
                 alert("保存成功");
-                window.location.href = ctx + "question";
+//                window.location.href = ctx + "question";
             }else{
                 alert(e.message);
             }
