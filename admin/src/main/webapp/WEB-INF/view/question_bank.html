@@ -223,31 +223,6 @@
         $("#workType").val("");
         $("#score").val("");
     });
-//    //查看详情
-//    $(".detail").click(function () {
-//        $('fieldset').attr("disabled",true);
-//        ajaxUtils.getData(ctx + "question/detail/"+$(this).attr("value"),function (e) {
-//            if(e.success){
-//               $("#title").val(e.data.title);
-//               $("#typeId").val(e.data.typeId);
-//               $("#workType").val(e.data.workType);
-//               $("#score").val(e.data.score);
-//            }
-//        })
-//    })
-//    //修改试题
-//    $(".update").click(function () {
-//        $("fieldset").removeAttr("disabled");
-//        $(".modal-dialog").attr('value',$(this).attr("value"));
-//        ajaxUtils.getData(ctx + "question/detail/"+$(this).attr("value"),function (e) {
-//            if(e.success){
-//                $("#title").val(e.data.title);
-//                $("#typeId").val(e.data.typeId);
-//                $("#workType").val(e.data.workType);
-//                $("#score").val(e.data.score);
-//            }
-//        })
-//    })
 
     //导入excel
     $(".import").bind("click",function (e) {

@@ -70,6 +70,11 @@ public class QuestionBankService {
             Question question = new Question();
             question.setTitle(String.valueOf(lo.get(0)));//题目
             question.setQuestionType(questionTypeRepository.findByValue(String.valueOf(lo.get(1))));//题型
+            //如果单选-答案项不能超过两个
+            if(questionTypeRepository.findByValue(String.valueOf(lo.get(1))).getValue().equals("单选题")&&String.valueOf(lo.get(3)).length()>1){
+                return AjaxResponse.fail("单选题正确答案不能为多个");
+            }
+
             question.setAnswers(handleAnswer(String.valueOf(lo.get(2)),String.valueOf(lo.get(3))));//答案选项
             question.setCorrectAnswer(String.valueOf(lo.get(3)));//正确答案
             question.setScore(Integer.parseInt(String.valueOf(lo.get(4))));
@@ -82,11 +87,14 @@ public class QuestionBankService {
     }
 
     /**
-     * 添加试题
+     * 单个添加试题
      * @param question
      * @return
      */
     public AjaxResponse addQuestion(Question question){
+        if(question.getQuestionType().getValue().equals("单选题")&&question.getCorrectAnswer().length()>1){
+            return AjaxResponse.fail("单选题正确答案不能为多个");
+        }
         question.setAddtime(LocalDateTime.now());
         question.setQuestionCategory(questionCategoryRepository.findByName(question.getQuestionCategory().getName()));
         question.setQuestionType(questionTypeRepository.findByValue(question.getQuestionType().getValue()));
@@ -100,6 +108,9 @@ public class QuestionBankService {
      * @return
      */
     public AjaxResponse editQuestion(Integer id,Question q){
+        if(q.getQuestionType().getValue()=="单选题"&&q.getCorrectAnswer().length()>1){
+            return AjaxResponse.fail("单选题答案不能为多个");
+        }
         Question question = questionBankRepository.findOne(id);
         question.setQuestionCategory(questionCategoryRepository.findByName(q.getQuestionCategory().getName()));
         question.setQuestionType(questionTypeRepository.findByValue(q.getQuestionType().getValue()));

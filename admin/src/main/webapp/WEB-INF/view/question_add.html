@@ -164,6 +164,9 @@
             alert("无法删除，试题至少包含一个答案");
         }else{
             $(this).parent().parent().remove();
+            $(".answer-item").each(function (i,e) {
+                $(this).find(".keyTag").html(optionArr[i]);
+            })
         }
     })
 
@@ -194,20 +197,54 @@
         $("tbody .answer-item").each(function (e) {
             var answer = new Object();
             answer.keyTag = $(this).find(".keyTag").html();
-            answer.content = $(this).find(".content").val();
+            answer.content = $(this).find(".content").val().trim();
             answer.correct = $(this).find(".answer_status").prop("checked");
             question.answers.push(answer);
         })
-        ajaxUtils.postJson(ctx + "question/add",question,function (e) {
-            if(e.success){
-                alert("试题保存成功");
-               window.location.href = ctx + "question";
-            }else{
-                alert(e.message);
-            }
-        })
+        if(checkData(question)){
+            ajaxUtils.postJson(ctx + "question/add",question,function (e) {
+                if(e.success){
+                    alert("试题保存成功");
+                    window.location.href = ctx + "question";
+                }else{
+                    alert(e.message);
+                }
+            })
+        }
 
     })
+
+    //JS校验form表单信息
+    function checkData(question){
+        if(!question.title.trim()){
+            alert("试题内容不能为空");
+            return false;
+        }
+        if(!question.score){
+            alert("试题分值为空");
+            return false;
+        }
+        var hasContent = true;
+        for (var key in question.answers) {
+            if (!question.answers[key].content){
+                hasContent = false;
+            }
+        }
+        if (!hasContent) {
+            alert("答案内容不能为空");
+            return false;
+        }
+        if(question.correctAnswer.length==0){
+            alert("未选择正确答案");
+            return false;
+        }
+        if(question.questionType.value=='单选题'&&question.correctAnswer.length>0){
+            alert("单选题只能有一个正确答案");
+            return false;
+        }
+
+        return true;
+    }
 </script>
 </body>
 </html>
