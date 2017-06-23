@@ -103,6 +103,9 @@
                     $("div#"+e.questionId).parent().find(".correctAnswer").removeAttr("hidden");
                 })
                 alert("你本次考试得分为"+e.data.examRecord.score);
+//                window.location.href = ctx + "exam";
+            }else{
+                alert(e.message)
             }
         })
     })

@@ -20,7 +20,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/")
-public class IndexController {
+public class ExaminationController {
 
     @Autowired
     private QuestionBankService questionBankService;
@@ -35,7 +35,7 @@ public class IndexController {
     @RequestMapping
     public ModelAndView examPaper(Pageable pageable){
         ModelAndView model = null;
-        AjaxResponse ajaxResponse = questionBankService.generateQuestionList(null);
+        AjaxResponse ajaxResponse = examinationService.isAttending(0);
         if(ajaxResponse.isSuccess()){
             model = new ModelAndView("index");
             model.addObject("questions",ajaxResponse.getData());
@@ -55,7 +55,7 @@ public class IndexController {
     @ResponseBody
     @RequestMapping(value = "/examination/submit", method = RequestMethod.POST)
     public AjaxResponse submitExamPage(@RequestBody List<UserAnswers> userAnswers,HttpServletRequest request) {
-        AjaxResponse result = examinationService.calculationScore("",userAnswers);
+        AjaxResponse result = examinationService.validateExam("张三",userAnswers);
         return result;
     }
 

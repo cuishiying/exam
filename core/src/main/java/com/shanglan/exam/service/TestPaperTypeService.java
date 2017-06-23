@@ -1,9 +1,6 @@
 package com.shanglan.exam.service;
 
-import com.shanglan.exam.base.AjaxResponse;
-import com.shanglan.exam.entity.QuestionCompositionItem;
 import com.shanglan.exam.entity.TestPaperType;
-import com.shanglan.exam.repository.TestPaperRuleRepository;
 import com.shanglan.exam.repository.TestPaperTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

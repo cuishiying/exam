@@ -28,6 +28,7 @@ public class ExamRecord extends BaseEntity {
     private Integer score;//得分
     private LocalDateTime examTime;//考试时间
     private boolean absence;//缺席，true缺席，false未缺席
+    private boolean pass;//缺席，true缺席，false未缺席
 
     public String getExamId() {
         return examId;
@@ -99,5 +100,13 @@ public class ExamRecord extends BaseEntity {
 
     public void setAbsence(boolean absence) {
         this.absence = absence;
+    }
+
+    public boolean isPass() {
+        return pass;
+    }
+
+    public void setPass(boolean pass) {
+        this.pass = pass;
     }
 }

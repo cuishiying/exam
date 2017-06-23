@@ -22,7 +22,7 @@ public class TestPaper extends BaseEntity {
     private boolean enable;
     private Integer examDuration; //单位：分钟
     @OneToMany(fetch= FetchType.EAGER, cascade= CascadeType.ALL, orphanRemoval=true)
-    private List<QuestionCompositionItem> questionComposition;//组卷规则
+    private List<TestPaperRule> questionComposition;//组卷规则
 
     public String getName() {
         return name;
@@ -56,11 +56,11 @@ public class TestPaper extends BaseEntity {
         this.examDuration = examDuration;
     }
 
-    public List<QuestionCompositionItem> getQuestionComposition() {
+    public List<TestPaperRule> getQuestionComposition() {
         return questionComposition;
     }
 
-    public void setQuestionComposition(List<QuestionCompositionItem> questionComposition) {
+    public void setQuestionComposition(List<TestPaperRule> questionComposition) {
         this.questionComposition = questionComposition;
     }
 }

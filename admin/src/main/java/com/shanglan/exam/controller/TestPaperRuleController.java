@@ -4,10 +4,6 @@ import com.shanglan.exam.base.AjaxResponse;
 import com.shanglan.exam.entity.*;
 import com.shanglan.exam.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,7 +38,7 @@ public class TestPaperRuleController {
     @RequestMapping
     public ModelAndView testPaperRuleView(){
         ModelAndView model = new ModelAndView("testpaper_rule");
-        List<QuestionCompositionItem> rules = testPaperRulesService.findAll();
+        List<TestPaperRule> rules = testPaperRulesService.findAll();
         List<TestPaperType> paperTypes = testPaperTypeService.findAll();
         model.addObject("rules",rules);
         model.addObject("paperTypes",paperTypes);
@@ -50,7 +46,7 @@ public class TestPaperRuleController {
     }
 
     @RequestMapping(path = "/save",method = RequestMethod.POST)
-    public AjaxResponse submitRules(@RequestBody List<QuestionCompositionItem> rules){
+    public AjaxResponse submitRules(@RequestBody List<TestPaperRule> rules){
         AjaxResponse ajaxResponse = testPaperRulesService.submitRules(rules);
         return ajaxResponse;
     }

@@ -1,6 +1,5 @@
 package com.shanglan.exam.repository;
 
-import com.shanglan.exam.entity.QuestionCompositionItem;
 import com.shanglan.exam.entity.TestPaperType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

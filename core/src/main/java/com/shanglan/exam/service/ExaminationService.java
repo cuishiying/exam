@@ -3,10 +3,7 @@ package com.shanglan.exam.service;
 import com.shanglan.exam.base.AjaxResponse;
 import com.shanglan.exam.dto.ExamRecordDTO;
 import com.shanglan.exam.dto.UserAnswers;
-import com.shanglan.exam.entity.Answer;
-import com.shanglan.exam.entity.ExamRecord;
-import com.shanglan.exam.entity.Question;
-import com.shanglan.exam.entity.User;
+import com.shanglan.exam.entity.*;
 import com.shanglan.exam.repository.ExaminationRepository;
 import com.shanglan.exam.repository.TestPaperRuleRepository;
 import com.shanglan.exam.repository.UserRepository;
@@ -19,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,6 +36,8 @@ public class ExaminationService {
     private TestPaperRuleRepository testPaperRuleRepository;
     @Autowired
     private ExaminationRepository examinationRepository;
+    @Autowired
+    private QuestionCategoryService questionCategoryService;
 
     /**
      * 用户是否有正在进行的考试
@@ -45,7 +45,25 @@ public class ExaminationService {
      * @return
      */
     public AjaxResponse isAttending(Integer empId) {
-        return AjaxResponse.success();
+        //todo
+        TestPaperRule qci = testPaperRuleRepository.findAll().get(0);
+
+        if(LocalTime.now().isBefore(qci.getEffectiveStartDate())){
+            //考试未开始
+            return AjaxResponse.fail("考试未开始");
+        }else if(LocalTime.now().isBefore(qci.getEffectiveEndDate())){
+            //开始正在进行
+            // TODO: 2017/6/23   分为没开始答题、正在答题
+            ExamRecord examRecord = examinationRepository.findExamRecord("张三", LocalDate.now().toString());
+            if(null!=examRecord){
+                return AjaxResponse.fail("你已经参加了考试");
+            }
+            AjaxResponse ajaxResponse = questionBankService.generateQuestionList(qci);
+            return ajaxResponse;
+        }else{
+            //开始已结束
+            return AjaxResponse.fail("考试已结束");
+        }
     }
 
     /**
@@ -59,11 +77,16 @@ public class ExaminationService {
 
     /**
      * 验证考卷
-     * @param empId
+     * @param accoutNumber
      * @return
      */
-    private AjaxResponse validateExam(Integer empId) {
-        return AjaxResponse.success();
+    public AjaxResponse validateExam(String accoutNumber,List<UserAnswers> userAnswers) {
+        ExamRecord examRecord = examinationRepository.findExamRecord(accoutNumber, LocalDate.now().toString());
+        if(null!=examRecord){
+            return AjaxResponse.fail("你已经参加了考试");
+        }
+
+        return calculationScore(accoutNumber,userAnswers);
     }
 
     /**
@@ -90,6 +113,19 @@ public class ExaminationService {
      * @return
      */
     public AjaxResponse calculationScore(String userId,List<UserAnswers> userAnswers){
+
+        User user = userRepository.findOne(1);
+
+        // TODO: 2017/6/23
+        if(null==user){
+            user = new User();
+            user.setMobile("15135173514");
+            user.setQq("123456");
+            user.setQuestionCategory(questionCategoryService.findByName("信息科"));
+            user.setUsername("张三");
+            user.setTruename("张三");
+        }
+
         int errScore = 0;
         int totalScore = 0;
         List<UserAnswers> errAnswers = new ArrayList<>();//返回错误试题集合
@@ -109,7 +145,9 @@ public class ExaminationService {
         DecimalFormat df=new DecimalFormat("0");
         String scoreStr = df.format((float) (totalScore - errScore) / totalScore*100);
 
-        User user = userRepository.findOne(1);
+
+        TestPaperRule tpr = testPaperRuleRepository.findByQuestionCategory(user.getQuestionCategory());
+
 
         //考试成绩
         ExamRecord examRecord = new ExamRecord();
@@ -120,6 +158,7 @@ public class ExaminationService {
         examRecord.setExamTime(LocalDateTime.now());
         examRecord.setAbsence(false);
         examRecord.setTestPaperType(testPaperRuleRepository.findByQuestionCategory(user.getQuestionCategory()).getTestPaperType());
+        examRecord.setPass(Integer.parseInt(scoreStr)>tpr.getPassScore()?true:false);
         examinationRepository.save(examRecord);
 
         ExamRecordDTO examRecordDTO = new ExamRecordDTO();

@@ -13,7 +13,7 @@ import java.time.LocalTime;
  *
  */
 @Entity
-public class QuestionCompositionItem extends BaseEntity {
+public class TestPaperRule extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;
 	@ManyToOne(optional = false)
@@ -24,6 +24,7 @@ public class QuestionCompositionItem extends BaseEntity {
 	private LocalTime 	effectiveEndDate;//有效结束时间
 	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	private TestPaperType testPaperType;//试卷类型
+	private Integer passScore;//及格线
 
 	public QuestionCategory getQuestionCategory() {
 		return questionCategory;
@@ -71,5 +72,13 @@ public class QuestionCompositionItem extends BaseEntity {
 
 	public void setTestPaperType(TestPaperType testPaperType) {
 		this.testPaperType = testPaperType;
+	}
+
+	public Integer getPassScore() {
+		return passScore;
+	}
+
+	public void setPassScore(Integer passScore) {
+		this.passScore = passScore;
 	}
 }

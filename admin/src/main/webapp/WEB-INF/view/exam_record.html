@@ -51,6 +51,7 @@
                         <th class="text-center">试卷类型</th>
                         <th class="text-center">考试时间</th>
                         <th class="text-center">得分</th>
+                        <th class="text-center">是否及格</th>
                         <th class="text-center">是否缺席</th>
                     </tr>
                     </thead>
@@ -61,6 +62,7 @@
                         <td th:text="${recore.testPaperType.name}">A</td>
                         <td th:text="${recore.examTime}"></td>
                         <td th:text="${recore.score}"></td>
+                        <td th:value="${recore.pass}">是</td>
                         <td th:text="${recore.absence}">否</td>
                     </tr>
                     </tbody>

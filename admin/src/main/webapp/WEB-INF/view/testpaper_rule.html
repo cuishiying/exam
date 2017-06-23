@@ -53,7 +53,7 @@
                             <th class="text-center" style="width: 10%">单选数量</th>
                             <th class="text-center" style="width: 10%">多选数量</th>
                             <th class="text-center" style="width: 10%">判断数量</th>
-                            <th class="text-center" style="width: 10%">合计</th>
+                            <th class="text-center" style="width: 10%">及格线(百分制)</th>
                             <th class="text-center" style="width: 15%">开始时间</th>
                             <th class="text-center" style="width: 15%">结束时间</th>
                             <th class="text-center" style="width: 10%">类型</th>
@@ -65,7 +65,7 @@
                             <td><input class="form-control countOfSingleChoice" value="1" th:value="${rule.countOfSingleChoice}"></td>
                             <td><input class="form-control countOfMutipleChoice" value="" th:value="${rule.countOfMutipleChoice}"></td>
                             <td><input class="form-control" value="0"></td>
-                            <td>7</td>
+                            <td><input class="form-control passScore" value="0" th:value="${rule?.passScore}"></td>
                             <td><input type="text" class="form-control date startTime" placeholder="" th:value="${#temporals.format(rule.effectiveStartDate,'HH:mm')}"></td>
                             <td><input type="text" class="form-control date endTime" placeholder="" th:value="${#temporals.format(rule.effectiveEndDate,'HH:mm')}"></td>
                             <td>
@@ -120,6 +120,7 @@
             questionCompositionItem.questionCategory = {"id":$(this).find(".questionCategory").attr("id"),"name":$(this).find(".questionCategory").text()};
             questionCompositionItem.countOfSingleChoice = $(this).find(".countOfSingleChoice").val();
             questionCompositionItem.countOfMutipleChoice = $(this).find(".countOfMutipleChoice").val();
+            questionCompositionItem.passScore = $(this).find(".passScore").val();
             questionCompositionItem.effectiveStartDate = $(this).find(".startTime").val();
             questionCompositionItem.effectiveEndDate = $(this).find(".endTime").val();
             questionCompositionItem.testPaperType = {"id":$(this).find("option:selected").attr("id"),name:$(this).find(".testPaperType").val()};
