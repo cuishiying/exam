@@ -2,10 +2,7 @@ package com.shanglan.exam.entity;
 
 import com.shanglan.exam.base.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -14,13 +11,18 @@ import java.util.List;
  * 试题类目（部门）
  */
 @Entity
+@Table(name = "cnoa_main_struct")
 public class QuestionCategory extends BaseEntity{
 
 
-    private static final long serialVersionUID = 178277452268870741L;
-
+    private static final long serialVersionUID = -5237030693999396489L;
     @Column(unique = true, nullable = false)
     private String name;// 类目名称
+
+    private Integer fid;
+    private String path;
+    private String about;
+
 
     public String getName() {
         return name;
@@ -30,4 +32,28 @@ public class QuestionCategory extends BaseEntity{
         this.name = name;
     }
 
+
+    public Integer getFid() {
+        return fid;
+    }
+
+    public void setFid(Integer fid) {
+        this.fid = fid;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
+    }
 }

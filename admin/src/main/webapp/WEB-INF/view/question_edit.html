@@ -50,7 +50,7 @@
                         </label>
                         <div class="col-sm-7">
                             <select class="form-control" id="questionType">
-                                <option th:each="questionType:${questionTypes.content}" th:text="${questionType.value}" th:value="${questionType.value}">练习题</option>
+                                <option th:each="questionType:${questionTypes}" th:text="${questionType.value}" th:value="${questionType.value}">练习题</option>
                             </select>
                         </div>
                     </div>
@@ -76,7 +76,7 @@
                         </label>
                         <div class="col-sm-7">
                             <select class="form-control" id="questionCategory">
-                                <option th:each="questionCategory:${questionCategories.content}" th:text="${questionCategory.name}" th:value="${questionCategory.name}">练习题</option>
+                                <option th:each="questionCategory:${questionCategories}" th:text="${questionCategory.name}" th:value="${questionCategory.name}">练习题</option>
                             </select>
                         </div>
                     </div>

@@ -3,8 +3,10 @@ package com.shanglan.exam.controller;
 import com.shanglan.exam.base.AjaxResponse;
 import com.shanglan.exam.entity.Question;
 import com.shanglan.exam.entity.QuestionType;
+import com.shanglan.exam.entity.User;
 import com.shanglan.exam.service.QuestionBankService;
 import com.shanglan.exam.service.QuestionTypeService;
+import com.shanglan.exam.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +32,8 @@ public class IndexController {
     private QuestionBankService questionBankService;
     @Autowired
     private QuestionTypeService questionTypeService;
+    @Autowired
+    private UserService userService;
 
     /**
      * 题库中心
@@ -37,12 +41,17 @@ public class IndexController {
      * @return
      */
     @RequestMapping
-    public ModelAndView index(@PageableDefault(value = 10,sort = "id",direction = Sort.Direction.DESC) Pageable pageable){
+    public ModelAndView index(String username,String truename,@PageableDefault(value = 10,sort = "id",direction = Sort.Direction.DESC) Pageable pageable,HttpServletRequest request){
+
+        User user = userService.findUserByUsernameAndtruename(username, truename);
+        if(null!=user){
+            request.getSession().invalidate();
+            request.getSession().setAttribute("uid", user.getUid());
+        }
+
         ModelAndView model = new ModelAndView("question_bank");
         Page<Question> questionBank = questionBankService.getQuestionBank(pageable);
-        Page<QuestionType> types = questionTypeService.findAll(null);
         model.addObject("page",questionBank);
-        model.addObject("types",types);
         return model;
     }
 }

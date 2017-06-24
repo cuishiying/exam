@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
+import java.util.List;
 
 
 /**
@@ -45,18 +46,16 @@ public class QuestionBankController {
     public ModelAndView index(String keyword,@PageableDefault(value = 10,sort = "id",direction = Sort.Direction.DESC) Pageable pageable){
         ModelAndView model = new ModelAndView("question_bank");
         Page<Question> questionBank = questionBankService.getQuestionBank(keyword,pageable);
-        Page<QuestionType> types = questionTypeService.findAll(null);
         model.addObject("page",questionBank);
         model.addObject("keyword",keyword);
-        model.addObject("types",types);
         return model;
     }
 
     @RequestMapping(path = "/add", method = RequestMethod.GET)
     public ModelAndView addQuestion(){
         ModelAndView model = new ModelAndView("question_add");
-        Page<QuestionType> questionTypes = questionTypeService.findAll(null);
-        Page<QuestionCategory> questionCategories = questionCategoryService.findAll(null);
+        List<QuestionType> questionTypes = questionTypeService.findAll();
+        List<QuestionCategory> questionCategories = questionCategoryService.findAll();
         model.addObject("questionTypes",questionTypes);
         model.addObject("questionCategories",questionCategories);
 
@@ -85,8 +84,8 @@ public class QuestionBankController {
     public ModelAndView questionEditView(@PathVariable Integer id){
         ModelAndView model = new ModelAndView("question_edit");
         Question question = questionBankService.findById(id);
-        Page<QuestionType> questionTypes = questionTypeService.findAll(null);
-        Page<QuestionCategory> questionCategories = questionCategoryService.findAll(null);
+        List<QuestionType> questionTypes = questionTypeService.findAll();
+        List<QuestionCategory> questionCategories = questionCategoryService.findAll();
         model.addObject("questionTypes",questionTypes);
         model.addObject("questionCategories",questionCategories);
         model.addObject("question",question);

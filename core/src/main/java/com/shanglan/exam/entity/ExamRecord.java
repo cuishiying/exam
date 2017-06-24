@@ -15,6 +15,7 @@ public class ExamRecord extends BaseEntity {
 
     private static final long serialVersionUID = 522708612562745572L;
 
+    private Integer uid;//用户唯一id
     private String examId; //考试id，唯一，避免多次考试
     private String accoutNumber;//帐号
     private String name;//姓名
@@ -29,6 +30,14 @@ public class ExamRecord extends BaseEntity {
     private LocalDateTime examTime;//考试时间
     private boolean absence;//缺席，true缺席，false未缺席
     private boolean pass;//缺席，true缺席，false未缺席
+
+    public Integer getUid() {
+        return uid;
+    }
+
+    public void setUid(Integer uid) {
+        this.uid = uid;
+    }
 
     public String getExamId() {
         return examId;

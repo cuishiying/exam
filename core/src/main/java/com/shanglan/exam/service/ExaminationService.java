@@ -31,7 +31,7 @@ public class ExaminationService {
     @Autowired
     private QuestionBankService questionBankService;
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
     @Autowired
     private TestPaperRuleRepository testPaperRuleRepository;
     @Autowired
@@ -41,20 +41,28 @@ public class ExaminationService {
 
     /**
      * 用户是否有正在进行的考试
-     * @param empId
+     * @param uid
      * @return
      */
-    public AjaxResponse isAttending(Integer empId) {
-        //todo
-        TestPaperRule qci = testPaperRuleRepository.findAll().get(0);
+    public AjaxResponse isAttending(Integer uid) {
+
+        if(null==uid){
+            return AjaxResponse.fail("当前未登录");
+        }
+
+        // TODO: 2017/6/24   这里需要对接
+        User user = userService.findByUid(uid);
+        Integer deptId = user.getDeptId();
+        QuestionCategory category = questionCategoryService.findByid(deptId);
+        TestPaperRule qci = testPaperRuleRepository.findByQuestionCategory(category);
 
         if(LocalTime.now().isBefore(qci.getEffectiveStartDate())){
             //考试未开始
             return AjaxResponse.fail("考试未开始");
         }else if(LocalTime.now().isBefore(qci.getEffectiveEndDate())){
             //开始正在进行
-            // TODO: 2017/6/23   分为没开始答题、正在答题
-            ExamRecord examRecord = examinationRepository.findExamRecord("张三", LocalDate.now().toString());
+            // TODO: 2017/6/23   分为没开始答题、正在答题,需要加缓存,后期加
+            ExamRecord examRecord = examinationRepository.findExamRecord(uid, LocalDate.now().toString());
             if(null!=examRecord){
                 return AjaxResponse.fail("你已经参加了考试");
             }
@@ -68,25 +76,25 @@ public class ExaminationService {
 
     /**
      * 从缓存中提交答案
-     * @param empId
+     * @param uid
      * @return
      */
-    public AjaxResponse submitExamToCache(Integer empId) {
+    public AjaxResponse submitExamToCache(Integer uid) {
         return AjaxResponse.success();
     }
 
     /**
-     * 验证考卷
-     * @param accoutNumber
+     * 验证考卷，是否已经参加考试
+     * @param uid
      * @return
      */
-    public AjaxResponse validateExam(String accoutNumber,List<UserAnswers> userAnswers) {
-        ExamRecord examRecord = examinationRepository.findExamRecord(accoutNumber, LocalDate.now().toString());
+    public AjaxResponse validateExam(Integer uid,List<UserAnswers> userAnswers) {
+        ExamRecord examRecord = examinationRepository.findExamRecord(uid, LocalDate.now().toString());
         if(null!=examRecord){
             return AjaxResponse.fail("你已经参加了考试");
         }
 
-        return calculationScore(accoutNumber,userAnswers);
+        return calculationScore(uid,userAnswers);
     }
 
     /**
@@ -112,18 +120,12 @@ public class ExaminationService {
      *计算考试得分
      * @return
      */
-    public AjaxResponse calculationScore(String userId,List<UserAnswers> userAnswers){
+    public AjaxResponse calculationScore(Integer uid,List<UserAnswers> userAnswers){
 
-        User user = userRepository.findOne(1);
+        User user = userService.findByUid(uid);
 
-        // TODO: 2017/6/23
         if(null==user){
-            user = new User();
-            user.setMobile("15135173514");
-            user.setQq("123456");
-            user.setQuestionCategory(questionCategoryService.findByName("信息科"));
-            user.setUsername("张三");
-            user.setTruename("张三");
+            return AjaxResponse.fail("帐号不存在");
         }
 
         int errScore = 0;

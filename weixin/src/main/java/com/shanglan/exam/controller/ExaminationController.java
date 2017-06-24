@@ -4,8 +4,10 @@ import com.shanglan.exam.base.AjaxResponse;
 import com.shanglan.exam.dto.QuestionDTO;
 import com.shanglan.exam.dto.UserAnswers;
 import com.shanglan.exam.entity.Question;
+import com.shanglan.exam.entity.User;
 import com.shanglan.exam.service.ExaminationService;
 import com.shanglan.exam.service.QuestionBankService;
+import com.shanglan.exam.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -26,16 +28,22 @@ public class ExaminationController {
     private QuestionBankService questionBankService;
     @Autowired
     private ExaminationService examinationService;
+    @Autowired
+    private UserService userService;
 
     /**
      * 考卷列表
-     * @param pageable
      * @return
      */
     @RequestMapping
-    public ModelAndView examPaper(Pageable pageable){
+    public ModelAndView examPaper(String username,String truename,HttpServletRequest request){
+        User user = userService.findUserByUsernameAndtruename(username, truename);
+        if(null!=user){
+            request.getSession().invalidate();
+            request.getSession().setAttribute("uid", user.getUid());
+        }
         ModelAndView model = null;
-        AjaxResponse ajaxResponse = examinationService.isAttending(0);
+        AjaxResponse ajaxResponse = examinationService.isAttending(user.getUid());
         if(ajaxResponse.isSuccess()){
             model = new ModelAndView("index");
             model.addObject("questions",ajaxResponse.getData());
@@ -55,7 +63,8 @@ public class ExaminationController {
     @ResponseBody
     @RequestMapping(value = "/examination/submit", method = RequestMethod.POST)
     public AjaxResponse submitExamPage(@RequestBody List<UserAnswers> userAnswers,HttpServletRequest request) {
-        AjaxResponse result = examinationService.validateExam("张三",userAnswers);
+        Integer uid = (Integer) request.getSession().getAttribute("uid");
+        AjaxResponse result = examinationService.validateExam(uid,userAnswers);
         return result;
     }
 

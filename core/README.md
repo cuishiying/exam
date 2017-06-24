@@ -17,7 +17,14 @@
     
 Todo
 
-    人员信息对接
-    设置及格线
+    人员信息对接   
+        
+        帐号密码：root/cnoa.cn2016pwddd
+        table:
+        cnoa_main_struct       部门
+        cnoa_main_user      用户
+        cnoa_main_station       岗位
+    
+    
     成绩汇总及图表
     

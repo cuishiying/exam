@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Created by cuishiying on 2017/6/14.
  * 题型
@@ -23,6 +25,11 @@ public class QuestionTypeService {
     public Page<QuestionType> findAll(Pageable pageable){
         Page<QuestionType> page = questionTypeRepository.findAll(pageable);
         return page;
+    }
+
+    public List<QuestionType> findAll(){
+        List<QuestionType> all = questionTypeRepository.findAll();
+        return all;
     }
 
     public QuestionType findByValue(String value){

@@ -11,14 +11,29 @@ import java.util.List;
  * 试卷//todo
  */
 @Entity
-public class User extends BaseEntity {
+@Table(name = "cnoa_main_user")
+public class User {
 
     private static final long serialVersionUID = -2301740839588119761L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    protected Integer uid;
     private String username;
     private String truename;
     private String mobile;
     private String workphone;
     private String qq;
+    private Integer deptId;//所属部门
+
+    public Integer getUid() {
+        return uid;
+    }
+
+    public void setUid(Integer uid) {
+        this.uid = uid;
+    }
+
     @ManyToOne(optional = false)
     private QuestionCategory questionCategory;//试题类目、工种
 
@@ -68,5 +83,13 @@ public class User extends BaseEntity {
 
     public void setQuestionCategory(QuestionCategory questionCategory) {
         this.questionCategory = questionCategory;
+    }
+
+    public Integer getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Integer deptId) {
+        this.deptId = deptId;
     }
 }

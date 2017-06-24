@@ -20,6 +20,11 @@ public class QuestionCategoryService {
     @Autowired
     private QuestionCategoryRepository questionCategoryRepository;
 
+    public QuestionCategory findByid(Integer id){
+        QuestionCategory questionCategory = questionCategoryRepository.findOne(id);
+        return questionCategory;
+    }
+
     public QuestionCategory findByName(String name){
         QuestionCategory questionCategory = questionCategoryRepository.findByName(name);
         return questionCategory;
@@ -29,6 +34,7 @@ public class QuestionCategoryService {
         Page<QuestionCategory> page = questionCategoryRepository.findAll(pageable);
         return page;
     }
+
 
     public List<QuestionCategory> findAll(){
         List<QuestionCategory> all = questionCategoryRepository.findAll();

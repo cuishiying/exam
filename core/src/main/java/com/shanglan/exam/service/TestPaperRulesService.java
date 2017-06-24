@@ -30,6 +30,11 @@ public class TestPaperRulesService {
     @Autowired
     private TestPaperTypeRepository testPaperTypeRepository;
 
+    /**
+     * 保存组题规则
+     * @param rules
+     * @return
+     */
     public AjaxResponse submitRules(List<TestPaperRule> rules){
 
         for (TestPaperRule e:rules) {
@@ -67,6 +72,7 @@ public class TestPaperRulesService {
                 TestPaperRule category = testPaperRuleRepository.findByQuestionCategory(e);
                 if(null==category){
                     TestPaperRule item = new TestPaperRule();
+                    // TODO: 2017/6/24 table确定后看是否是第一个
                     item.setTestPaperType(testPaperTypeRepository.findAll().get(0));
                     item.setQuestionCategory(e);
                     item.setCountOfMutipleChoice(1);

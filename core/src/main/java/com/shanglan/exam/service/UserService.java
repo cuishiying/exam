@@ -1,5 +1,7 @@
 package com.shanglan.exam.service;
 
+import com.shanglan.exam.base.AjaxResponse;
+import com.shanglan.exam.entity.User;
 import com.shanglan.exam.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,4 +15,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    public User findUserByUsernameAndtruename(String username, String truename){
+        User user = userRepository.findUserByUsernameAndtruename(username, truename);
+        return user;
+    }
+
+    public User findByUid(Integer uid){
+        User user = userRepository.findByUid(uid);
+        return user;
+    }
+
+
 }

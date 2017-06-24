@@ -12,6 +12,6 @@ import org.springframework.data.jpa.repository.Query;
  */
 public interface ExaminationRepository  extends JpaRepository<ExamRecord, Integer>,JpaSpecificationExecutor<ExamRecord> {
 
-    @Query("select e from ExamRecord e where e.name =?1 and e.examId=?2")
-    ExamRecord findExamRecord(String accoutNumber, String examId);
+    @Query("select e from ExamRecord e where e.uid =?1 and e.examId=?2")
+    ExamRecord findExamRecord(Integer uid, String examId);
 }
