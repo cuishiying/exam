@@ -109,4 +109,10 @@ public class QuestionBankController {
         AjaxResponse ajaxResponse = questionBankService.importExcel(in, file);
         return ajaxResponse;
     }
+
+    @RequestMapping(path = "/tip2Pc",method = RequestMethod.GET)
+    public ModelAndView tip2Pc(){
+        ModelAndView model = new ModelAndView("tip2Pc");
+        return model;
+    }
 }
