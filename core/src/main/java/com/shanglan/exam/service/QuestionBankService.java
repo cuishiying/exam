@@ -78,7 +78,7 @@ public class QuestionBankService {
             question.setAnswers(handleAnswer(String.valueOf(lo.get(2)),String.valueOf(lo.get(3))));//答案选项
             question.setCorrectAnswer(String.valueOf(lo.get(3)));//正确答案
             question.setScore(Integer.parseInt(String.valueOf(lo.get(4))));
-            // TODO: 2017/6/24 这里需要确认，是否部门不存在时不录入并提醒 
+            // TODO: 2017/6/24 这里需要确认，是否部门不存在时不录入并提醒
             if(null==questionCategoryRepository.findByName(String.valueOf(lo.get(5)))){
                 QuestionCategory questionCategory = new QuestionCategory();
                 questionCategory.setName(String.valueOf(lo.get(5)));
