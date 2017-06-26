@@ -34,6 +34,10 @@
 		<property name="maxIdle" value="${jdbc.pool.maxIdle}" />
 		<property name="maxWait" value="${jdbc.pool.maxWait}" />
 	</bean>
+	<!-- 配置Jdbc模板 -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
 		<property name="packagesToScan" value="com.shanglan.exam.entity, com.shanglan.exam.converter"/>
@@ -46,7 +50,7 @@
 				<prop key="hibernate.show_sql">true</prop>
 				<prop key="hibernate.format_sql">true</prop>
 				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
-				<!--<prop key="hibernate.physical_naming_strategy">com.shanglan.exam.converter.SimplePhysicalNamingStrategy</prop>-->
+				<prop key="hibernate.physical_naming_strategy">com.shanglan.exam.converter.SimplePhysicalNamingStrategy</prop>
 				<prop key="hibernate.implicit_naming_strategy">org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl</prop>
 			</props>
 		</property>

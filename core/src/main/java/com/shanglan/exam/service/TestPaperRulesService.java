@@ -42,8 +42,8 @@ public class TestPaperRulesService {
                 //开始时间大于结束时间
                 return AjaxResponse.fail("考试开始时间不得小于结束时间");
             }
-            if(null!=testPaperRuleRepository.findByQuestionCategory(e.getQuestionCategory())){
-                e.setId(testPaperRuleRepository.findByQuestionCategory(e.getQuestionCategory()).getId());
+            if(null!=testPaperRuleRepository.findByQuestionCategory(e.getQuestionCategory().getId())){
+                e.setId(testPaperRuleRepository.findByQuestionCategory(e.getQuestionCategory().getId()).getId());
                 e.setQuestionCategory(questionCategoryRepository.findByName(e.getQuestionCategory().getName()));
                 e.setTestPaperType(testPaperTypeRepository.findOne(e.getTestPaperType().getId()));
             }
@@ -69,7 +69,7 @@ public class TestPaperRulesService {
 
         if(rules.size()<categoryList.size()){
             categoryList.forEach(e->{
-                TestPaperRule category = testPaperRuleRepository.findByQuestionCategory(e);
+                TestPaperRule category = testPaperRuleRepository.findByQuestionCategory(e.getId());
                 if(null==category&&e.getFid()!=0&&e.getFid()!=1){
                     TestPaperRule item = new TestPaperRule();
                     // TODO: 2017/6/24 table确定后看是否是第一个
@@ -83,9 +83,17 @@ public class TestPaperRulesService {
                     rules.add(item);
                 }
             });
+            testPaperRuleRepository.save(rules);
         }
-        testPaperRuleRepository.save(rules);
-
         return rules;
+    }
+
+    public TestPaperRule findByQuestionCategory(Integer id){
+        TestPaperRule rule = testPaperRuleRepository.findByQuestionCategory(id);
+        return rule;
+    }
+    public TestPaperRule findByQuestionCategory(QuestionCategory questionCategory){
+        TestPaperRule rule = testPaperRuleRepository.findByQuestionCategory(questionCategory);
+        return rule;
     }
 }

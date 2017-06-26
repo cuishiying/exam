@@ -33,7 +33,7 @@ public class ExaminationService {
     @Autowired
     private UserService userService;
     @Autowired
-    private TestPaperRuleRepository testPaperRuleRepository;
+    private TestPaperRulesService testPaperRulesService;
     @Autowired
     private ExaminationRepository examinationRepository;
     @Autowired
@@ -54,8 +54,11 @@ public class ExaminationService {
         User user = userService.findByUid(uid);
         Integer deptId = user.getDeptId();
         QuestionCategory category = questionCategoryService.findByid(deptId);
-        TestPaperRule qci = testPaperRuleRepository.findByQuestionCategory(category);
+        TestPaperRule qci = testPaperRulesService.findByQuestionCategory(category);
 
+        if(null==qci){
+            return AjaxResponse.fail("信息有误");
+        }
         if(LocalTime.now().isBefore(qci.getEffectiveStartDate())){
             //考试未开始
             return AjaxResponse.fail("考试未开始");
@@ -148,7 +151,7 @@ public class ExaminationService {
         String scoreStr = df.format((float) (totalScore - errScore) / totalScore*100);
 
 
-        TestPaperRule tpr = testPaperRuleRepository.findByQuestionCategory(user.getQuestionCategory());
+        TestPaperRule tpr = testPaperRulesService.findByQuestionCategory(user.getDeptId());
 
 
         //考试成绩
@@ -156,10 +159,10 @@ public class ExaminationService {
         examRecord.setScore(Integer.parseInt(scoreStr));
         examRecord.setExamId(LocalDate.now().toString());
         examRecord.setName(user.getUsername());
-        examRecord.setQuestionCategory(user.getQuestionCategory());
+        examRecord.setQuestionCategory(questionCategoryService.findByid(user.getDeptId()));
         examRecord.setExamTime(LocalDateTime.now());
         examRecord.setAbsence(false);
-        examRecord.setTestPaperType(testPaperRuleRepository.findByQuestionCategory(user.getQuestionCategory()).getTestPaperType());
+        examRecord.setTestPaperType(testPaperRulesService.findByQuestionCategory(user.getDeptId()).getTestPaperType());
         examRecord.setPass(Integer.parseInt(scoreStr)>tpr.getPassScore()?true:false);
         examinationRepository.save(examRecord);
 

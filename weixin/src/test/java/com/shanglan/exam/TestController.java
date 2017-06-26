@@ -1,7 +1,9 @@
 package com.shanglan.exam;
 
 import com.shanglan.exam.controller.ExaminationController;
+import com.shanglan.exam.entity.TestPaperRule;
 import com.shanglan.exam.entity.User;
+import com.shanglan.exam.service.TestPaperRulesService;
 import com.shanglan.exam.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +35,8 @@ public class TestController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private TestPaperRulesService testPaperRulesService;
 
 
     @InjectMocks
@@ -82,5 +86,17 @@ public class TestController {
     public void testUserCount() throws Exception{
         Integer count = userService.count();
         System.out.println("==="+count);
+    }
+
+    @Test
+    public void testRules() throws Exception{
+        List<TestPaperRule> all = testPaperRulesService.findAll();
+        System.out.println("==="+all.size());
+    }
+
+    @Test
+    public void testRule() throws Exception{
+        TestPaperRule rule = testPaperRulesService.findByQuestionCategory(24);
+        System.out.println("==="+rule.getEffectiveEndDate().toString());
     }
 }
