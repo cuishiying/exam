@@ -19,7 +19,7 @@ Todo
 
     人员信息对接   
         
-        帐号密码：root/cnoa.cn2016pwddd
+        帐号密码：cnoa_oa:root/cnoa.cn2016pwddd
         table:
         cnoa_main_struct       部门
         cnoa_main_user      用户

@@ -70,7 +70,7 @@ public class TestPaperRulesService {
         if(rules.size()<categoryList.size()){
             categoryList.forEach(e->{
                 TestPaperRule category = testPaperRuleRepository.findByQuestionCategory(e);
-                if(null==category){
+                if(null==category&&e.getFid()!=0&&e.getFid()!=1){
                     TestPaperRule item = new TestPaperRule();
                     // TODO: 2017/6/24 table确定后看是否是第一个
                     item.setTestPaperType(testPaperTypeRepository.findAll().get(0));

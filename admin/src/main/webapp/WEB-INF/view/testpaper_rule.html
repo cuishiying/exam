@@ -70,7 +70,7 @@
                             <td><input type="text" class="form-control date endTime" placeholder="" th:value="${#temporals.format(rule.effectiveEndDate,'HH:mm')}"></td>
                             <td>
                                 <select class="form-control testPaperType">
-                                    <option th:each="paperType:${paperTypes}" th:text="${paperType.name}" th:id="${paperType.id}" th:selected="${paperType.name==rule.testPaperType.name}">随机题</option>
+                                    <option th:each="paperType:${paperTypes}" th:text="${paperType?.name}" th:id="${paperType?.id}">随机题</option>
                                 </select>
                             </td>
                         </tr>

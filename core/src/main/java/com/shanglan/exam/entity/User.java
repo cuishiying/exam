@@ -21,10 +21,44 @@ public class User {
     protected Integer uid;
     private String username;
     private String truename;
-    private String mobile;
+    private String phone;
     private String workphone;
     private String qq;
+    @Column(name="deptId")
     private Integer deptId;//所属部门
+
+
+
+//    private String password;
+//    private String salt;
+//    private boolean isSystemUser;
+//    private String language;
+//    private Integer customPermit;
+//    private Integer partTime;
+//    private String partTimeJob;
+//    private String personSign;
+//    private String workStatusType;
+//    private Integer sex;
+//    private String wangwang;
+//    private String email;
+//    private String birthday;
+//    private Integer borndatatype;
+//    private Integer jobid;
+//    private String stationid;
+//    private Integer ruzhishijie;
+//    private String address;
+//    private String idcard;
+//    private String leaveDay;
+//    private Integer worktimeid;
+//    private String bindIP;
+//    private String importKey;
+//    private Integer importType;
+//    private String face;
+//    private String theme;
+//    private String last_logintime;
+
+//    private String
+
 
     public Integer getUid() {
         return uid;
@@ -53,12 +87,12 @@ public class User {
         this.truename = truename;
     }
 
-    public String getMobile() {
-        return mobile;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getWorkphone() {

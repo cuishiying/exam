@@ -16,10 +16,10 @@ public class QuestionCategory extends BaseEntity{
 
 
     private static final long serialVersionUID = -5237030693999396489L;
-    @Column(unique = true, nullable = false)
+    @Column(unique = false, nullable = false)
     private String name;// 类目名称
 
-    private Integer fid;
+    private Integer fid;//组织机构层级
     private String path;
     private String about;
 

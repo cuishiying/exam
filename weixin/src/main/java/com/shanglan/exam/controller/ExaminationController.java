@@ -37,19 +37,23 @@ public class ExaminationController {
      */
     @RequestMapping
     public ModelAndView examPaper(String username,String truename,HttpServletRequest request){
+
+        ModelAndView model = null;
         User user = userService.findUserByUsernameAndtruename(username, truename);
         if(null!=user){
             request.getSession().invalidate();
             request.getSession().setAttribute("uid", user.getUid());
-        }
-        ModelAndView model = null;
-        AjaxResponse ajaxResponse = examinationService.isAttending(user.getUid());
-        if(ajaxResponse.isSuccess()){
-            model = new ModelAndView("index");
-            model.addObject("questions",ajaxResponse.getData());
+            AjaxResponse ajaxResponse = examinationService.isAttending(user.getUid());
+            if(ajaxResponse.isSuccess()){
+                model = new ModelAndView("index");
+                model.addObject("questions",ajaxResponse.getData());
+            }else{
+                model = new ModelAndView("exam_status");
+                model.addObject("message",ajaxResponse.getMessage());
+            }
         }else{
             model = new ModelAndView("exam_status");
-            model.addObject("message",ajaxResponse.getMessage());
+            model.addObject("message",AjaxResponse.fail("用户不存在").getMessage());
         }
         return model;
     }

@@ -34,6 +34,10 @@
 		<property name="maxIdle" value="${jdbc.pool.maxIdle}" />
 		<property name="maxWait" value="${jdbc.pool.maxWait}" />
 	</bean>
+	<!-- 配置Jdbc模板 -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
 	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
 		<property name="packagesToScan" value="com.shanglan.exam.entity, com.shanglan.exam.converter"/>

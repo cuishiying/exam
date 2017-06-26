@@ -7,12 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Created by cuishiying on 2017/6/21.
  */
 @Service
 @Transactional
 public class UserService {
+
     @Autowired
     private UserRepository userRepository;
 
@@ -24,6 +27,16 @@ public class UserService {
     public User findByUid(Integer uid){
         User user = userRepository.findByUid(uid);
         return user;
+    }
+
+    public List<User> findAll(){
+        List<User> all = userRepository.findAll();
+        return all;
+    }
+
+    public Integer count(){
+        Integer count = userRepository.count();
+        return count;
     }
 
 

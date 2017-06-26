@@ -79,11 +79,11 @@ public class QuestionBankService {
             question.setCorrectAnswer(String.valueOf(lo.get(3)));//正确答案
             question.setScore(Integer.parseInt(String.valueOf(lo.get(4))));
             // TODO: 2017/6/24 这里需要确认，是否部门不存在时不录入并提醒
-            if(null==questionCategoryRepository.findByName(String.valueOf(lo.get(5)))){
-                QuestionCategory questionCategory = new QuestionCategory();
-                questionCategory.setName(String.valueOf(lo.get(5)));
-                questionCategoryRepository.save(questionCategory);
-            }
+//            if(null==questionCategoryRepository.findByName(String.valueOf(lo.get(5)))){
+//                QuestionCategory questionCategory = new QuestionCategory();
+//                questionCategory.setName(String.valueOf(lo.get(5)));
+//                questionCategoryRepository.save(questionCategory);
+//            }
             question.setQuestionCategory(questionCategoryRepository.findByName(String.valueOf(lo.get(5))));
             question.setAddtime(LocalDateTime.now());
             questions.add(question);
@@ -114,7 +114,6 @@ public class QuestionBankService {
      * @return
      */
     public AjaxResponse addQuestion(Question question){
-        initQuestionType();
         if(question.getQuestionType().getValue().equals("单选题")&&question.getCorrectAnswer().length()>1){
             return AjaxResponse.fail("单选题正确答案不能为多个");
         }
