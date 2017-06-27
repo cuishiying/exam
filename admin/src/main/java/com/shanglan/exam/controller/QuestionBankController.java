@@ -43,7 +43,7 @@ public class QuestionBankController {
      * @return
      */
     @RequestMapping
-    public ModelAndView index(String keyword,@PageableDefault(value = 10,sort = "id",direction = Sort.Direction.DESC) Pageable pageable){
+    public ModelAndView index(String keyword,@PageableDefault(value = 10,sort = "id",direction = Sort.Direction.DESC) Pageable pageable,HttpServletRequest request){
         ModelAndView model = new ModelAndView("question_bank");
         Page<Question> questionBank = questionBankService.getQuestionBank(keyword,pageable);
         model.addObject("page",questionBank);

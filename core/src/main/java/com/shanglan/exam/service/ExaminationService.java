@@ -156,6 +156,7 @@ public class ExaminationService {
 
         //考试成绩
         ExamRecord examRecord = new ExamRecord();
+        examRecord.setUid(uid);
         examRecord.setScore(Integer.parseInt(scoreStr));
         examRecord.setExamId(LocalDate.now().toString());
         examRecord.setName(user.getUsername());

@@ -22,7 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @RestController
 @RequestMapping("/exam")
-public class ExaminationController {
+public class RecordController {
 
     @Autowired
     private ExaminationService examinationService;

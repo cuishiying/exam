@@ -36,10 +36,12 @@ public interface QuestionBankRepository extends JpaRepository<Question, Integer>
 
     /**
      * 搜索相关试题
-     * @param keyword
      * @param pageable
      * @return
      */
+    @Query("select q from Question q where q.questionCategory!=null")
+    Page<Question> findAll(Pageable pageable);
+
     @Query("select q from Question q where (q.title like ?1 or q.questionCategory.name like ?1 or q.questionType.value like ?1)")
     Page<Question> findAll(String keyword, Pageable pageable);
 }

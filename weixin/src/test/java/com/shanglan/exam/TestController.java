@@ -1,6 +1,6 @@
 package com.shanglan.exam;
 
-import com.shanglan.exam.controller.ExaminationController;
+import com.shanglan.exam.controller.ExamController;
 import com.shanglan.exam.entity.TestPaperRule;
 import com.shanglan.exam.entity.User;
 import com.shanglan.exam.service.TestPaperRulesService;
@@ -40,7 +40,7 @@ public class TestController {
 
 
     @InjectMocks
-    private ExaminationController indexController;       //需要测试的Controller
+    private ExamController indexController;       //需要测试的Controller
     private MockMvc mockMvc;        //SpringMVC提供的Controller测试类
 
 

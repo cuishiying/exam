@@ -22,7 +22,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/")
-public class ExaminationController {
+public class ExamController {
 
     @Autowired
     private QuestionBankService questionBankService;
