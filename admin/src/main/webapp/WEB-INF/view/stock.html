@@ -19,6 +19,8 @@
 
     <!-- Custom styles for this template -->
     <link th:href="@{/static/css/index.css}" rel="stylesheet">
+    <link th:href="@{/static/css/jquery.datetimepicker.css}" rel="stylesheet">
+
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><!--<script src="../js/ie8-responsive-file-warning.js"></script>--><![endif]-->
@@ -43,27 +45,33 @@
 
             <!--<h2 class="sub-header">Section title</h2>-->
             <div class="table-responsive">
+
+                <div class="row">
+                    <form th:action="@{/stock}" method="get">
+                        <div class="col-lg-2">
+                            <input type="text" class="form-control date" placeholder="开始时间" name="startTime" th:value="${queryDTO.startTime?.toString()}">
+                        </div>
+                        <div class="col-lg-2">
+                            <input type="text" class="form-control date" placeholder="结束时间" name="endTime" th:value="${queryDTO.endTime?.toString()}">
+                        </div>
+                        <div class="col-lg-1">
+                            <input type="submit" class="form-control btn  btn-primary search" value="搜索">
+                        </div>
+                    </form>
+                </div>
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th class="text-center">姓名</th>
-                        <th class="text-center">工种</th>
-                        <th class="text-center">试卷类型</th>
-                        <th class="text-center">考试时间</th>
-                        <th class="text-center">得分</th>
-                        <th class="text-center">是否及格</th>
-                        <th class="text-center">是否缺席</th>
+                        <th class="text-center">排名</th>
+                        <th class="text-center">部门</th>
+                        <th class="text-center">及格率</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr class="text-center" th:each="recore:${page}">
-                        <td th:text="${recore.name}"></td>
-                        <td th:text="${recore.questionCategory.name}"></td>
-                        <td th:text="${recore.testPaperType.name}">A</td>
-                        <td th:text="${recore.examTime}"></td>
-                        <td th:text="${recore.score}"></td>
-                        <td th:value="${recore.pass}">是</td>
-                        <td th:text="${recore.absence}">否</td>
+                    <tr class="text-center" th:each="stock,i:${categories}">
+                        <td th:text="${i.index+1}"></td>
+                        <td th:text="${stock.questionCategory.name}"></td>
+                        <td th:text="${stock.passRate*100+'%'}">0</td>
                     </tr>
                     </tbody>
                 </table>
@@ -86,11 +94,22 @@
 <script th:src="@{/static/js/global.js}"></script>
 <script th:src="@{/static/js/jquery.form.js}"></script>
 <script th:src="@{/static/utils/httpUtils.js}"></script>
+<script th:src="@{/static/js/jquery.js}"></script>
+<script th:src="@{/static/js/jquery.datetimepicker.full.js}"></script>
+
 
 
 <script type="text/javascript" th:inline="javascript">
 
 //    var ctx = /*[[@{/}]]*/;
+    $('.date').datetimepicker({
+        lang:"ch", //语言选择中文 注：旧版本 新版方法：$.datetimepicker.setLocale('ch');
+        format:"Y-m-d",      //格式化日期
+        timepicker:false,    //关闭时间选项
+        yearStart:2000,     //设置最小年份
+        yearEnd:2050,        //设置最大年份
+        todayButton:false    //关闭选择今天按钮
+    });
 
 </script>
 </body>

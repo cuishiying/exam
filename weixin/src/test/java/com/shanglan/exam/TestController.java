@@ -3,6 +3,7 @@ package com.shanglan.exam;
 import com.shanglan.exam.controller.ExamController;
 import com.shanglan.exam.entity.TestPaperRule;
 import com.shanglan.exam.entity.User;
+import com.shanglan.exam.service.ExaminationService;
 import com.shanglan.exam.service.TestPaperRulesService;
 import com.shanglan.exam.service.UserService;
 import org.junit.Before;
@@ -37,6 +38,8 @@ public class TestController {
     private UserService userService;
     @Autowired
     private TestPaperRulesService testPaperRulesService;
+    @Autowired
+    private ExaminationService examinationService;
 
 
     @InjectMocks

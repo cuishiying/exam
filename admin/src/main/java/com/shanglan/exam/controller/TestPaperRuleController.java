@@ -22,9 +22,6 @@ import java.util.List;
 public class TestPaperRuleController {
 
     @Autowired
-    private QuestionCategoryService questionCategoryService;
-
-    @Autowired
     private TestPaperRulesService testPaperRulesService;
 
     @Autowired

@@ -2,23 +2,31 @@ package com.shanglan.exam.service;
 
 import com.shanglan.exam.base.AjaxResponse;
 import com.shanglan.exam.dto.ExamRecordDTO;
+import com.shanglan.exam.dto.QueryDTO;
+import com.shanglan.exam.dto.StockItemDTO;
 import com.shanglan.exam.dto.UserAnswers;
 import com.shanglan.exam.entity.*;
 import com.shanglan.exam.repository.ExaminationRepository;
 import com.shanglan.exam.repository.TestPaperRuleRepository;
 import com.shanglan.exam.repository.UserRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.Predicate;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -176,6 +184,79 @@ public class ExaminationService {
         examRecordDTO.setErrAnswers(errAnswers);
 
         return AjaxResponse.success(examRecordDTO);
+    }
+
+    /**
+     * 考试各部门统计
+     * @return
+     */
+    public AjaxResponse stockExam(QueryDTO queryDTO){
+        List<QuestionCategory> categoryList = questionCategoryService.findAll();
+        List<StockItemDTO> list = new ArrayList<>();
+        categoryList.forEach(e->{
+            StockItemDTO stockItemDTO = new StockItemDTO();
+            stockItemDTO.setQuestionCategory(e);
+            stockItemDTO.setPassRate(calculationPassRate(e.getId(),queryDTO));
+            list.add(stockItemDTO);
+        });
+        Collections.sort(list);
+        return AjaxResponse.success(list);
+    }
+
+    /**
+     * 计算部门及格率
+     */
+    public double calculationPassRate(Integer questionCategoryId,QueryDTO queryDTO){
+//        Specification<ExamRecord> spec = this.getWhereClause(queryDTO);
+        Long totalCount = new Long(1);
+        Long passCount = new Long(0);
+        if(null==queryDTO.getStartTime()&&null==queryDTO.getEndTime()){
+            totalCount = examinationRepository.findTotalCountByCategory(questionCategoryId);
+            passCount = examinationRepository.findPassCountByCategory(questionCategoryId);
+        }else {
+            LocalDateTime begin = null;
+            LocalDateTime end = null;
+            if(null!=queryDTO.getStartTime()&&null==queryDTO.getEndTime()){
+               begin = LocalDateTime.of(queryDTO.getStartTime(), LocalTime.MIN);
+               end = LocalDateTime.now();
+            }else if(null==queryDTO.getStartTime()&&null!=queryDTO.getEndTime()){
+                begin = LocalDateTime.MIN;
+                end = LocalDateTime.of(queryDTO.getEndTime(), LocalTime.MAX);
+            }else if(null!=queryDTO.getStartTime()&&null!=queryDTO.getEndTime()){
+                begin = LocalDateTime.of(queryDTO.getStartTime(), LocalTime.MIN);
+                end = LocalDateTime.of(queryDTO.getEndTime(), LocalTime.MAX);
+            }
+            totalCount = examinationRepository.findTotalCountByCategory(questionCategoryId,begin,end);
+            passCount = examinationRepository.findPassCountByCategory(questionCategoryId,begin,end);
+        }
+        BigDecimal divide = BigDecimal.valueOf(passCount).divide(BigDecimal.valueOf(totalCount==0?1:totalCount),2, RoundingMode.HALF_UP);
+        return divide.doubleValue();
+    }
+
+    /**
+     * 多条件查询
+     * @param queryVo
+     * @return
+     */
+    private Specification<ExamRecord> getWhereClause(QueryDTO queryVo){
+        return (root, query, cb) -> {
+            List<Predicate> predicate = new ArrayList<>();
+
+            //时间
+            if(queryVo!=null&&queryVo.getStartTime()!=null){
+                LocalDateTime begin = LocalDateTime.of(queryVo.getStartTime(), LocalTime.MIN);
+                Predicate startQuery = cb.greaterThanOrEqualTo(root.<LocalDateTime>get("examTime"), begin);
+                predicate.add(startQuery);
+            }
+            if(queryVo!=null&&queryVo.getEndTime()!=null){
+                LocalDateTime end = LocalDateTime.of(queryVo.getEndTime(), LocalTime.MAX);
+                Predicate endQuery = cb.lessThanOrEqualTo(root.<LocalDateTime>get("examTime"), end);
+                predicate.add(endQuery);
+            }
+
+
+            return query.where(predicate.toArray(new Predicate[predicate.size()])).getRestriction();
+        };
     }
 
 
