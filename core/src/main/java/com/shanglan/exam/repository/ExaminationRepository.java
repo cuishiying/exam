@@ -3,6 +3,8 @@ package com.shanglan.exam.repository;
 import com.shanglan.exam.entity.ExamRecord;
 import com.shanglan.exam.entity.QuestionType;
 import com.shanglan.exam.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -14,4 +16,7 @@ public interface ExaminationRepository  extends JpaRepository<ExamRecord, Intege
 
     @Query("select e from ExamRecord e where e.uid =?1 and e.examId=?2")
     ExamRecord findExamRecord(Integer uid, String examId);
+
+    @Query("select e from ExamRecord e where e.uid=?1")
+    Page<ExamRecord> findAll(Integer uid,Pageable pageable);
 }

@@ -114,9 +114,13 @@ public class ExaminationService {
      * @param pageable
      * @return
      */
-    public Page<ExamRecord> findAll(Pageable pageable){
-        Page<ExamRecord> page = examinationRepository.findAll(pageable);
+    public Page<ExamRecord> findAll(Integer uid,Pageable pageable){
+        Page<ExamRecord> page = examinationRepository.findAll(uid,pageable);
         return page;
+    }
+    public List<ExamRecord> findAll(){
+        List<ExamRecord> list = examinationRepository.findAll();
+        return list;
     }
 
     /**
