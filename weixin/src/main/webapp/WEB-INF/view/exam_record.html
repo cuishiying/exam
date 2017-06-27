@@ -23,6 +23,12 @@
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><!--<script src="../js/ie8-responsive-file-warning.js"></script>--><![endif]-->
     <script th:src="@{/static/js/ie-emulation-modes-warning.js}"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>-->
+    <![endif]-->
 </head>
 
 <body>
@@ -31,9 +37,37 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <p class="page-header" th:text="${message}"></p>
+            <h2 class="page-header">成绩统计</h2>
 
 
+            <!--<h2 class="sub-header">Section title</h2>-->
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th class="text-center">姓名</th>
+                        <th class="text-center">工种</th>
+                        <th class="text-center">试卷类型</th>
+                        <th class="text-center">考试时间</th>
+                        <th class="text-center">得分</th>
+                        <th class="text-center">是否及格</th>
+                        <th class="text-center">是否缺席</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="text-center" th:each="recore:${page.content}">
+                        <td th:text="${recore.name}"></td>
+                        <td th:text="${recore.questionCategory.name}"></td>
+                        <td th:text="${recore.testPaperType.name}">A</td>
+                        <td th:text="${recore.examTime}"></td>
+                        <td th:text="${recore.score}"></td>
+                        <td th:value="${recore.pass}">是</td>
+                        <td th:text="${recore.absence}">否</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
         </div>
     </div>
 </div>
@@ -48,11 +82,15 @@
 <script th:src="@{/static/js/holder.min.js}"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script th:src="@{/static/js/ie10-viewport-bug-workaround.js}"></script>
+<script th:src="@{/static/js/global.js}"></script>
+<script th:src="@{/static/js/jquery.form.js}"></script>
+<script th:src="@{/static/utils/httpUtils.js}"></script>
 
 
 <script type="text/javascript" th:inline="javascript">
 
-    var ctx = /*[[@{/}]]*/;
+//    var ctx = /*[[@{/}]]*/;
+
 </script>
 </body>
 </html>
