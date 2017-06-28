@@ -221,7 +221,8 @@ public class QuestionBankService {
         long moreCount = questionBankRepository.countByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("多选题"), qci.getQuestionCategory().getId());
         long torfCount = questionBankRepository.countByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("判断题"), qci.getQuestionCategory().getId());
         if (qci.getCountOfSingleChoice() > oneCount || qci.getCountOfMutipleChoice() > moreCount || qci.getCountOfTorF()>torfCount) {
-            throw new RuntimeException("数据错误，类目所需试题数大于类目总试题数");
+//            throw new RuntimeException("数据错误，类目所需试题数大于类目总试题数");
+            return AjaxResponse.fail("数据错误，类目所需试题数大于类目总试题数,请重新设置考试规则");
         }
 
         //随机出单选题
