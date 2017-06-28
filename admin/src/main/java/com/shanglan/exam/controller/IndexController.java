@@ -31,8 +31,6 @@ public class IndexController {
     @Autowired
     private QuestionBankService questionBankService;
     @Autowired
-    private QuestionTypeService questionTypeService;
-    @Autowired
     private UserService userService;
 
     /**

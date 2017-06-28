@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../static/images/favicon.ico">
+
+    <title>登录</title>
+
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/static/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link th:href="@{/static/css/ie10-viewport-bug-workaround.css}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/static/css/signin.css}" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><!--<script src="../../assets/js/ie8-responsive-file-warning.js"></script>--><![endif]-->
+    <script th:src="@{/static/js/ie-emulation-modes-warning.js}"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <!--<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>-->
+    <!--<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>-->
+    <!--[endif]-->
+</head>
+
+<body>
+
+<div class="container">
+
+    <form class="form-signin" th:action="@{/login}" th:method="post" onSubmit="return from1();">
+        <!--<h2 class="form-signin-heading">Please sign in</h2>-->
+        <label for="username" class="sr-only">Email address</label>
+        <input type="text" id="username" class="form-control" placeholder="username" name="username" required autofocus>
+        <label for="truename" class="sr-only">Password</label>
+        <input type="text" id="truename" class="form-control" placeholder="truename" name="truename" required>
+        <!--<div class="checkbox">-->
+            <!--<label>-->
+                <!--<input type="checkbox" value="remember-me"> Remember me-->
+            <!--</label>-->
+        <!--</div>-->
+        <button class="btn btn-lg btn-primary btn-block login" type="button">登录</button>
+    </form>
+
+</div> <!-- /container -->
+
+
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script th:src="@{/static/js/ie10-viewport-bug-workaround.js}"></script>
+<script th:src="@{/static/js/jquery.min.js}"></script>
+<script th:src="@{/static/utils/httpUtils.js}"></script>
+
+<script type="text/javascript" th:inline="javascript">
+    var ctx = /*[[@{/}]]*/;
+    function from1(){
+        var allValid = true;
+        if($("[name='username']").val().length == 0){
+            $("[name='username']").next().find(".hint_warning").show();
+            $("[name='username']").next().find(".hint_exactness").hide();
+            $("[name='username']").parent().attr("class","accountNumber_out current");
+            allValid = false;
+        }else{
+            $("[name='username']").next().find(".hint_exactness").show();
+            $("[name='username']").next().find(".hint_warning").hide();
+            $("[name='username']").parent().attr("class","accountNumber_out");
+        }
+        if($("[name='truename']").val().length == 0||$("[name='truename']").val().length < 5){
+            $("[name='truename']").next().find(".hint_warning").show();
+            $("[name='truename']").next().find(".hint_exactness").hide();
+            $("[name='truename']").parent().attr("class","accountNumber_out current");
+            allValid = false;
+        }else{
+            $("[name='truename']").next().find(".hint_warning").hide();
+            $("[name='truename']").next().find(".hint_exactness").show();
+            $("[name='truename']").parent().attr("class","accountNumber_out");
+        }
+        return allValid;
+    }
+    $(".login").click(function (e) {
+        var params = {};
+        params.username = $("#username").val();
+        params.truename = $("#truename").val();
+        console.log(params)
+        ajaxUtils.postParams(ctx + "login",params,function (e) {
+            if(e.success){
+                window.location.href = ctx+"question";
+            }else{
+                alert("登录失败");
+            }
+
+        })
+    })
+
+</script>
+</body>
+</html>
