@@ -7,6 +7,7 @@ import com.shanglan.exam.entity.User;
 import com.shanglan.exam.service.QuestionBankService;
 import com.shanglan.exam.service.QuestionTypeService;
 import com.shanglan.exam.service.UserService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,15 +42,17 @@ public class IndexController {
     @RequestMapping
     public ModelAndView index(String username,String truename,@PageableDefault(value = 10,sort = "id",direction = Sort.Direction.DESC) Pageable pageable,HttpServletRequest request){
 
-        User user = userService.findUserByUsernameAndtruename(username, truename);
-        if(null!=user){
+        ModelAndView model = null;
+        if(StringUtils.isNotEmpty(username)&&StringUtils.isNotEmpty(truename)){
+            User user = userService.findUserByUsernameAndtruename(username, truename);
             request.getSession().invalidate();
             request.getSession().setAttribute("uid", user.getUid());
+            model = new ModelAndView("question_bank");
+            Page<Question> questionBank = questionBankService.getQuestionBank(pageable);
+            model.addObject("page",questionBank);
+        }else{
+            model = new ModelAndView("redirect:/login");
         }
-
-        ModelAndView model = new ModelAndView("question_bank");
-        Page<Question> questionBank = questionBankService.getQuestionBank(pageable);
-        model.addObject("page",questionBank);
         return model;
     }
 }

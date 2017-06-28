@@ -54,14 +54,19 @@ public class ExamController {
             uid = (Integer) request.getSession().getAttribute("uid");
         }
 
-        AjaxResponse ajaxResponse = examinationService.isAttending(uid);
-        if(ajaxResponse.isSuccess()){
-            model = new ModelAndView("exam_question");
-            model.addObject("questions",ajaxResponse.getData());
+        if(null==uid){
+            model = new ModelAndView("redirect:/login");
         }else{
-            model = new ModelAndView("exam_status");
-            model.addObject("message",ajaxResponse.getMessage());
+            AjaxResponse ajaxResponse = examinationService.isAttending(uid);
+            if(ajaxResponse.isSuccess()){
+                model = new ModelAndView("exam_question");
+                model.addObject("questions",ajaxResponse.getData());
+            }else{
+                model = new ModelAndView("exam_status");
+                model.addObject("message",ajaxResponse.getMessage());
+            }
         }
+
         return model;
     }
 
