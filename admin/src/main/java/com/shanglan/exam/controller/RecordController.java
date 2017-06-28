@@ -27,7 +27,7 @@ import java.util.List;
  * Created by cuishiying on 2017/6/13.
  */
 @RestController
-@RequestMapping("/exam")
+@RequestMapping("/record")
 public class RecordController {
 
     @Autowired

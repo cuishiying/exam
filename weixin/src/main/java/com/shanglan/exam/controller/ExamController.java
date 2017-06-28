@@ -9,6 +9,7 @@ import com.shanglan.exam.entity.User;
 import com.shanglan.exam.service.ExaminationService;
 import com.shanglan.exam.service.QuestionBankService;
 import com.shanglan.exam.service.UserService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -31,8 +32,6 @@ import java.util.Map;
 public class ExamController {
 
     @Autowired
-    private QuestionBankService questionBankService;
-    @Autowired
     private ExaminationService examinationService;
     @Autowired
     private UserService userService;
@@ -45,21 +44,23 @@ public class ExamController {
     public ModelAndView examPaper(String username,String truename,HttpServletRequest request){
 
         ModelAndView model = null;
-        User user = userService.findUserByUsernameAndtruename(username, truename);
-        if(null!=user){
+        Integer uid = 0;
+        if(StringUtils.isNotEmpty(username)&&StringUtils.isNotEmpty(truename)){
+            User user = userService.findUserByUsernameAndtruename(username, truename);
             request.getSession().invalidate();
             request.getSession().setAttribute("uid", user.getUid());
-            AjaxResponse ajaxResponse = examinationService.isAttending(user.getUid());
-            if(ajaxResponse.isSuccess()){
-                model = new ModelAndView("index");
-                model.addObject("questions",ajaxResponse.getData());
-            }else{
-                model = new ModelAndView("exam_status");
-                model.addObject("message",ajaxResponse.getMessage());
-            }
+            uid = user.getUid();
+        }else{
+            uid = (Integer) request.getSession().getAttribute("uid");
+        }
+
+        AjaxResponse ajaxResponse = examinationService.isAttending(uid);
+        if(ajaxResponse.isSuccess()){
+            model = new ModelAndView("exam_question");
+            model.addObject("questions",ajaxResponse.getData());
         }else{
             model = new ModelAndView("exam_status");
-            model.addObject("message",AjaxResponse.fail("用户不存在").getMessage());
+            model.addObject("message",ajaxResponse.getMessage());
         }
         return model;
     }

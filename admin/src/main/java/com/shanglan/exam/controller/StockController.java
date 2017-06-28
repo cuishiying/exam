@@ -37,7 +37,7 @@ public class StockController {
     @RequestMapping
     public ModelAndView index(QueryDTO queryDTO, HttpServletRequest request){
 
-        ModelAndView model = new ModelAndView("stock");
+        ModelAndView model = new ModelAndView("exam_stock");
         Integer uid = (Integer) request.getSession().getAttribute("uid");
         if(null!=uid){
             AjaxResponse ajaxResponse = examinationService.stockExam(queryDTO);

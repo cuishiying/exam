@@ -4,9 +4,8 @@ import com.shanglan.exam.base.AjaxResponse;
 import com.shanglan.exam.entity.Question;
 import com.shanglan.exam.entity.QuestionCategory;
 import com.shanglan.exam.entity.QuestionType;
-import com.shanglan.exam.service.QuestionBankService;
-import com.shanglan.exam.service.QuestionCategoryService;
-import com.shanglan.exam.service.QuestionTypeService;
+import com.shanglan.exam.entity.User;
+import com.shanglan.exam.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +35,7 @@ public class QuestionBankController {
     private QuestionTypeService questionTypeService;
     @Autowired
     private QuestionCategoryService questionCategoryService;
+
 
     /**
      * 题库中心
@@ -109,6 +109,7 @@ public class QuestionBankController {
         AjaxResponse ajaxResponse = questionBankService.importExcel(in, file);
         return ajaxResponse;
     }
+
 
     @RequestMapping(path = "/tip2Pc",method = RequestMethod.GET)
     public ModelAndView tip2Pc(){
