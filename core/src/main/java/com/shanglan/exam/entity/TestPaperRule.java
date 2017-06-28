@@ -25,6 +25,7 @@ public class TestPaperRule extends BaseEntity {
 	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
 	private TestPaperType testPaperType;//试卷类型
 	private Integer passScore;//及格线
+	private Integer examDuration; //单位：分钟
 
 	public QuestionCategory getQuestionCategory() {
 		return questionCategory;
@@ -80,5 +81,13 @@ public class TestPaperRule extends BaseEntity {
 
 	public void setPassScore(Integer passScore) {
 		this.passScore = passScore;
+	}
+
+	public Integer getExamDuration() {
+		return examDuration;
+	}
+
+	public void setExamDuration(Integer examDuration) {
+		this.examDuration = examDuration;
 	}
 }

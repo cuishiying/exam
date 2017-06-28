@@ -86,6 +86,20 @@ public class ExaminationService {
     }
 
     /**
+     * 获取考试时长
+     * @param uid
+     * @return
+     * @throws Exception
+     */
+    public Integer examDuration(Integer uid){
+        User user = userService.findByUid(uid);
+        Integer deptId = user.getDeptId();
+        QuestionCategory category = questionCategoryService.findByid(deptId);
+        TestPaperRule qci = testPaperRulesService.findByQuestionCategory(category);
+        return qci.getExamDuration();
+    }
+
+    /**
      * 从缓存中提交答案
      * @param uid
      * @return
