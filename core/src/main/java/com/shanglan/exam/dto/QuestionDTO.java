@@ -11,6 +11,7 @@ import java.util.List;
 public class QuestionDTO {
     private List<Question> singleChoiceList;
     private List<Question> mutipleChoiceList;
+    private List<Question> torfList;
 
     public List<Question> getSingleChoiceList() {
         return singleChoiceList;
@@ -26,5 +27,13 @@ public class QuestionDTO {
 
     public void setMutipleChoiceList(List<Question> mutipleChoiceList) {
         this.mutipleChoiceList = mutipleChoiceList;
+    }
+
+    public List<Question> getTorfList() {
+        return torfList;
+    }
+
+    public void setTorfList(List<Question> torfList) {
+        this.torfList = torfList;
     }
 }

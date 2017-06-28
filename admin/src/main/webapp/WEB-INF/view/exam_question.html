@@ -71,6 +71,20 @@
                         </div>
                     </li>
                 </ul>
+                <ul class="list-group">
+                    <li class="list-group-item active">判断题</li>
+                    <li class="list-group-item item" th:each="question:${questions.torfList}">
+                        <div class="title" th:text="${question.title}"  th:id="${question.id}"></div>
+                        <div class="radio answer-item" th:each="answer:${question.answers}">
+                            <label>
+                                <input type="radio" th:name="${question.id}" th:text="${answer.keyTag}+'、'+${answer.content}" th:id="${answer.keyTag}">
+                            </label>
+                        </div>
+                        <div class="correctAnswer has-error" hidden="hidden">
+                            <label class="control-label" th:text="'正确答案:'+${question.correctAnswer}"></label>
+                        </div>
+                    </li>
+                </ul>
                 <button class="btn btn-primary submit" type="button">提交</button>
             </div>
         </div>
@@ -94,7 +108,7 @@
     var ctx = /*[[@{/}]]*/;
     var countDown = /*[[${examDuration}]]*/
 
-
+    //考试倒计时
     $(function () {
         var time = countDown*60;
         var sec = Number(time); // 剩余秒数
@@ -107,13 +121,13 @@
                 // 时间用尽
                 $(".submit").trigger("click");
             }
-//            console.log(txt);
             $(".examDuration").html(txt)
             sec--;
         }, 1000);
         
     })
 
+    //提交答案
     $(".submit").click(function () {
         $(".has-error").prop("hidden",true);
         $(".title").removeClass("text-danger");

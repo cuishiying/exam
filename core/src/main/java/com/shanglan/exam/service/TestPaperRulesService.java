@@ -77,6 +77,7 @@ public class TestPaperRulesService {
                     item.setQuestionCategory(e);
                     item.setCountOfMutipleChoice(1);
                     item.setCountOfSingleChoice(1);
+                    item.setCountOfTorF(1);
                     item.setPassScore(60);
                     item.setExamDuration(60);
                     item.setEffectiveStartDate(LocalTime.now());

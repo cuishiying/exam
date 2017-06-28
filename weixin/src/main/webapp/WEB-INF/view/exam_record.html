@@ -63,8 +63,8 @@
                         <td th:text="${recore.testPaperType.name}">A</td>
                         <td th:text="${recore.examTime}"></td>
                         <td th:text="${recore.score}"></td>
-                        <td th:value="${recore.pass}">是</td>
-                        <td th:text="${recore.absence}">否</td>
+                        <td th:text="${recore.pass?'是':'否'}">是</td>
+                        <td th:text="${recore.absence?'是':'否'}">否</td>
                     </tr>
                     </tbody>
                 </table>

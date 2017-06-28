@@ -40,6 +40,10 @@
             <nav th:replace="common/fragment :: nav-menu"></nav>
             <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
+                <div class="form-inline" style="margin-bottom: 10px">
+                    剩余时间:<span class="examDuration">00:00</span>
+                </div>
+
                 <ul class="list-group">
                     <li class="list-group-item active">单选题</li>
                     <li class="list-group-item item" th:each="question:${questions.singleChoiceList}">
@@ -68,6 +72,20 @@
                         </div>
                     </li>
                 </ul>
+                <ul class="list-group">
+                    <li class="list-group-item active">判断题</li>
+                    <li class="list-group-item item" th:each="question:${questions.torfList}">
+                        <div class="title" th:text="${question.title}"  th:id="${question.id}"></div>
+                        <div class="radio answer-item" th:each="answer:${question.answers}">
+                            <label>
+                                <input type="radio" th:name="${question.id}" th:text="${answer.keyTag}+'、'+${answer.content}" th:id="${answer.keyTag}">
+                            </label>
+                        </div>
+                        <div class="correctAnswer has-error" hidden="hidden">
+                            <label class="control-label" th:text="'正确答案:'+${question.correctAnswer}"></label>
+                        </div>
+                    </li>
+                </ul>
                 <button class="btn btn-primary submit" type="button">提交</button>
             </div>
         </div>
@@ -89,6 +107,28 @@
 <script type="text/javascript" th:inline="javascript">
 
     var ctx = /*[[@{/}]]*/;
+    var countDown = /*[[${examDuration}]]*/
+
+    //考试倒计时
+    $(function () {
+        var time = countDown*60;
+        var sec = Number(time); // 剩余秒数
+        var countdown = setInterval(function() {
+            var m = parseInt(sec/60);
+            var s = sec % 60;
+            var txt = (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+            if (sec < 1) {
+                clearInterval(countdown);
+                // 时间用尽
+//                $(".submit").trigger("click");
+            }
+            $(".examDuration").html(txt)
+            sec--;
+        }, 1000);
+
+    })
+
+    //提交答案
     $(".submit").click(function () {
         $(".has-error").prop("hidden",true);
         $(".title").removeClass("text-danger");

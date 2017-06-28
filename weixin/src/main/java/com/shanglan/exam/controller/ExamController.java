@@ -61,6 +61,7 @@ public class ExamController {
             if(ajaxResponse.isSuccess()){
                 model = new ModelAndView("exam_question");
                 model.addObject("questions",ajaxResponse.getData());
+                model.addObject("examDuration",(Integer)examinationService.examDuration(uid));
             }else{
                 model = new ModelAndView("exam_status");
                 model.addObject("message",ajaxResponse.getMessage());

@@ -20,6 +20,7 @@ public class TestPaperRule extends BaseEntity {
 	private QuestionCategory questionCategory;//试题类目、工种
 	private Integer countOfSingleChoice;//单选数量
 	private Integer countOfMutipleChoice;//多选数量
+	private Integer countOfTorF;//判断数量
 	private LocalTime effectiveStartDate;//有效起始时间
 	private LocalTime 	effectiveEndDate;//有效结束时间
 	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
@@ -49,6 +50,14 @@ public class TestPaperRule extends BaseEntity {
 
 	public void setCountOfMutipleChoice(Integer countOfMutipleChoice) {
 		this.countOfMutipleChoice = countOfMutipleChoice;
+	}
+
+	public Integer getCountOfTorF() {
+		return countOfTorF;
+	}
+
+	public void setCountOfTorF(Integer countOfTorF) {
+		this.countOfTorF = countOfTorF;
 	}
 
 	public LocalTime getEffectiveStartDate() {

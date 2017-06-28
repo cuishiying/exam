@@ -65,7 +65,7 @@
                             <td th:text="${rule.questionCategory.name}" th:id="${rule.questionCategory.id}" class="questionCategory"></td>
                             <td><input class="form-control countOfSingleChoice" value="1" th:value="${rule.countOfSingleChoice}"></td>
                             <td><input class="form-control countOfMutipleChoice" value="" th:value="${rule.countOfMutipleChoice}"></td>
-                            <td><input class="form-control" value="0"></td>
+                            <td><input class="form-control countOfTorF" value="0" th:value="${rule.countOfTorF}"></td>
                             <td><input class="form-control passScore" value="0" th:value="${rule?.passScore}"></td>
                             <td><input class="form-control examDuration" value="0" th:value="${rule?.examDuration}"></td>
                             <td><input type="text" class="form-control date startTime" placeholder="" th:value="${#temporals.format(rule.effectiveStartDate,'HH:mm')}"></td>
@@ -123,6 +123,7 @@
             questionCompositionItem.questionCategory = {"id":$(this).find(".questionCategory").attr("id"),"name":$(this).find(".questionCategory").text()};
             questionCompositionItem.countOfSingleChoice = $(this).find(".countOfSingleChoice").val();
             questionCompositionItem.countOfMutipleChoice = $(this).find(".countOfMutipleChoice").val();
+            questionCompositionItem.countOfTorF = $(this).find(".countOfTorF").val();
             questionCompositionItem.passScore = $(this).find(".passScore").val();
             questionCompositionItem.examDuration = $(this).find(".examDuration").val();
             questionCompositionItem.effectiveStartDate = $(this).find(".startTime").val();

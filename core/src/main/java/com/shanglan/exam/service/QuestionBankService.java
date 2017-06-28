@@ -211,7 +211,8 @@ public class QuestionBankService {
         //获得单选多选总数
         long oneCount = questionBankRepository.countByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("单选题"), qci.getQuestionCategory().getId());
         long moreCount = questionBankRepository.countByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("多选题"), qci.getQuestionCategory().getId());
-        if (qci.getCountOfSingleChoice() > oneCount || qci.getCountOfMutipleChoice() > moreCount) {
+        long torfCount = questionBankRepository.countByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("判断题"), qci.getQuestionCategory().getId());
+        if (qci.getCountOfSingleChoice() > oneCount || qci.getCountOfMutipleChoice() > moreCount || qci.getCountOfTorF()>torfCount) {
             throw new RuntimeException("数据错误，类目所需试题数大于类目总试题数");
         }
 
@@ -225,9 +226,15 @@ public class QuestionBankService {
         List<Integer> moreIds = this.randomList(questionId2, qci.getCountOfMutipleChoice());
         List<Question> mutipleChoiceList = questionBankRepository.findAll(moreIds);
 
+        //随机出判断题
+        List<Integer> questionId3 = questionBankRepository.findAllByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("判断题"), qci.getQuestionCategory().getId());
+        List<Integer> torfIds = this.randomList(questionId3, qci.getCountOfTorF());
+        List<Question> torfList = questionBankRepository.findAll(torfIds);
+
         QuestionDTO questionDTO = new QuestionDTO();
         questionDTO.setSingleChoiceList(singleChoiceList);
         questionDTO.setMutipleChoiceList(mutipleChoiceList);
+        questionDTO.setTorfList(torfList);
         return AjaxResponse.success(questionDTO);
     }
 
