@@ -9,6 +9,7 @@ import com.shanglan.exam.repository.QuestionBankRepository;
 import com.shanglan.exam.repository.QuestionCategoryRepository;
 import com.shanglan.exam.repository.QuestionTypeRepository;
 import com.shanglan.exam.repository.TestPaperRuleRepository;
+import com.shanglan.exam.utils.JavaUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -71,15 +72,19 @@ public class QuestionBankService {
             question.setTitle(String.valueOf(lo.get(0)));//题目
             question.setQuestionType(questionTypeRepository.findByValue(String.valueOf(lo.get(1))));//题型
             //如果单选-答案项不能超过两个
-            if(questionTypeRepository.findByValue(String.valueOf(lo.get(1))).getValue().equals("单选题")&&String.valueOf(lo.get(3)).length()>1){
-                return AjaxResponse.fail("单选题正确答案不能为多个");
+            if(questionTypeRepository.findByValue(String.valueOf(lo.get(1))).getValue().equals("单选题")&& JavaUtils.replaceBlank(String.valueOf(lo.get(3))).length()>1){
+                String log = String.valueOf(lo.get(3)).trim();
+                Integer count = log.length();
+                return AjaxResponse.fail("第"+(i+1)+"行数据单选题正确答案不能为多个");
             }
-            if(questionTypeRepository.findByValue(String.valueOf(lo.get(1))).getValue().equals("判断题")&&String.valueOf(lo.get(3)).length()>1){
-                return AjaxResponse.fail("判断题只有一个正确答案");
+            if(questionTypeRepository.findByValue(String.valueOf(lo.get(1))).getValue().equals("判断题")&&String.valueOf(lo.get(3)).trim().length()>1){
+                String log = String.valueOf(lo.get(3)).trim();
+                Integer count = log.length();
+                return AjaxResponse.fail("第"+(i+1)+"行数据判断题只有一个正确答案");
             }
             question.setAnswers(handleAnswer(String.valueOf(lo.get(2)),String.valueOf(lo.get(3))));//答案选项
             question.setCorrectAnswer(String.valueOf(lo.get(3)));//正确答案
-            question.setScore(Integer.parseInt(String.valueOf(lo.get(4))));
+            question.setScore(Integer.parseInt(StringUtils.isEmpty(String.valueOf(lo.get(4)))?"1":String.valueOf(lo.get(4))));
             // TODO: 2017/6/24 这里需要确认，是否部门不存在时不录入并提醒
 //            if(null==questionCategoryRepository.findByName(String.valueOf(lo.get(5)))){
 //                QuestionCategory questionCategory = new QuestionCategory();
@@ -189,6 +194,15 @@ public class QuestionBankService {
         return question;
     }
 
+    public Page<Question> findAll(Pageable pageable){
+        Page<Question> all = questionBankRepository.findAll(pageable);
+        return all;
+    }
+    public Page<Question> findAll(String keyword,Pageable pageable){
+        Page<Question> all = questionBankRepository.findAll("%"+keyword+"%",pageable);
+        return all;
+    }
+
     /**
      * 组答案
      * @param answers
@@ -244,6 +258,9 @@ public class QuestionBankService {
         questionDTO.setSingleChoiceList(singleChoiceList);
         questionDTO.setMutipleChoiceList(mutipleChoiceList);
         questionDTO.setTorfList(torfList);
+        questionDTO.setShowSingleChoice(singleChoiceList.size()>0);
+        questionDTO.setShowMutipleChoice(mutipleChoiceList.size()>0);
+        questionDTO.setShowTorf(torfList.size()>0);
         return AjaxResponse.success(questionDTO);
     }
 

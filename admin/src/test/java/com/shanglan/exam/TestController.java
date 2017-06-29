@@ -1,6 +1,9 @@
 package com.shanglan.exam;
 
 import com.shanglan.exam.controller.IndexController;
+import com.shanglan.exam.entity.Question;
+import com.shanglan.exam.repository.QuestionBankRepository;
+import com.shanglan.exam.service.QuestionBankService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,6 +11,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ContextConfiguration;
@@ -18,6 +23,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by cuishiying on 2017/6/24.
@@ -30,8 +38,8 @@ public class TestController {
     @Autowired
     protected WebApplicationContext wac;
 
-//    @Autowired
-//    private IndexController indexController;
+    @Autowired
+    private QuestionBankService questionBankService;
 
 
     @InjectMocks
@@ -64,8 +72,9 @@ public class TestController {
         }
     }
 
-//    @Test
-//    public void testIndex() throws Exception{
-//        indexController.index("张三","111111",null,null);
-//    }
+    @Test
+    public void testIndex() throws Exception{
+        Page<Question> all = questionBankService.findAll("",null);
+        System.out.println(all.getTotalElements());
+    }
 }

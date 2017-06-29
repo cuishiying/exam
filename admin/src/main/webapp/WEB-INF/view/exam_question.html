@@ -43,7 +43,7 @@
                 <div class="form-inline" style="margin-bottom: 10px">
                     剩余时间:<span class="examDuration">00:00</span>
                 </div>
-                <ul class="list-group">
+                <ul class="list-group" th:hidden="${!questions.showSingleChoice}">
                     <li class="list-group-item active">单选题</li>
                     <li class="list-group-item item" th:each="question:${questions.singleChoiceList}">
                         <div class="title" th:text="${question.title}" th:id="${question.id}"></div>
@@ -57,7 +57,7 @@
                         </div>
                     </li>
                 </ul>
-                <ul class="list-group">
+                <ul class="list-group" th:hidden="${!questions.showMutipleChoice}">
                     <li class="list-group-item active">多选题</li>
                     <li class="list-group-item item" th:each="question:${questions.mutipleChoiceList}">
                         <div class="title" th:text="${question.title}"  th:id="${question.id}"></div>
@@ -71,7 +71,7 @@
                         </div>
                     </li>
                 </ul>
-                <ul class="list-group">
+                <ul class="list-group" th:hidden="${!questions.showTorf}">
                     <li class="list-group-item active">判断题</li>
                     <li class="list-group-item item" th:each="question:${questions.torfList}">
                         <div class="title" th:text="${question.title}"  th:id="${question.id}"></div>
@@ -107,7 +107,7 @@
 
     var ctx = /*[[@{/}]]*/;
     var countDown = /*[[${examDuration}]]*/
-
+    var questions = /*[[${questions}]]*/
     //考试倒计时
     $(function () {
         var time = countDown*60;
@@ -124,7 +124,6 @@
             $(".examDuration").html(txt)
             sec--;
         }, 1000);
-        
     })
 
     //提交答案

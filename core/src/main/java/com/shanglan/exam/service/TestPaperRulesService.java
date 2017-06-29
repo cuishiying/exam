@@ -75,9 +75,9 @@ public class TestPaperRulesService {
                     // TODO: 2017/6/24 table确定后看是否是第一个
                     item.setTestPaperType(testPaperTypeRepository.findAll().get(0));
                     item.setQuestionCategory(e);
-                    item.setCountOfMutipleChoice(1);
-                    item.setCountOfSingleChoice(1);
-                    item.setCountOfTorF(1);
+                    item.setCountOfMutipleChoice(0);
+                    item.setCountOfSingleChoice(0);
+                    item.setCountOfTorF(0);
                     item.setPassScore(60);
                     item.setExamDuration(60);
                     item.setEffectiveStartDate(LocalTime.now());

@@ -22,6 +22,7 @@ public class QuestionCategory extends BaseEntity{
     private Integer fid;//组织机构层级
     private String path;
     private String about;
+    private Integer order;
 
 
     public String getName() {
@@ -55,5 +56,13 @@ public class QuestionCategory extends BaseEntity{
 
     public void setAbout(String about) {
         this.about = about;
+    }
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
     }
 }

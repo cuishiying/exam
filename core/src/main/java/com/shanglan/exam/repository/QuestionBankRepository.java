@@ -21,7 +21,7 @@ public interface QuestionBankRepository extends JpaRepository<Question, Integer>
      * @param questionCategoryId
      * @return
      */
-    @Query("select count(*) from Question q where q.questionType =?1 and q.questionCategory.id=?2")
+    @Query("select count(1) from Question q where q.questionType =?1 and q.questionCategory.id=?2")
     Long countByQuestionTypeAndQuestionCategory(QuestionType type, Integer questionCategoryId);
 
     /**
@@ -39,9 +39,13 @@ public interface QuestionBankRepository extends JpaRepository<Question, Integer>
      * @param pageable
      * @return
      */
-    @Query("select q from Question q where q.questionCategory!=null")
-    Page<Question> findAll(Pageable pageable);
+//    @Query("select q from Question q where q.questionCategory!=null")
+//    Page<Question> findAll(Pageable pageable);
 
-    @Query("select q from Question q where (q.title like ?1 or q.questionCategory.name like ?1 or q.questionType.value like ?1)")
+    @Query("select q from Question q where q.title like ?1 or q.questionType.value like ?1")
     Page<Question> findAll(String keyword, Pageable pageable);
+
+
+//    @Query("select q from Question q where q.title like ?1 or q.questionCategory.name like ?1 or q.questionType.value like ?1")
+//    Page<Question> findAll(String keyword, Pageable pageable);
 }
