@@ -25,6 +25,13 @@ public interface QuestionBankRepository extends JpaRepository<Question, Integer>
     Long countByQuestionTypeAndQuestionCategory(QuestionType type, Integer questionCategoryId);
 
     /**
+     * 通用-题型数量
+     * @return
+     */
+    @Query("select count(1) from Question q where q.questionCategory is null")
+    Long countByNormal();
+
+    /**
      * 根据部门-题型获取所有试题
      * @param type
      * @param questionCategoryId
@@ -33,6 +40,13 @@ public interface QuestionBankRepository extends JpaRepository<Question, Integer>
     @Query("select q.id from Question q where  q.questionType =?1 and q.questionCategory.id=?2")
     List<Integer> findAllByQuestionTypeAndQuestionCategory(QuestionType type, Integer questionCategoryId);
 
+
+    /**
+     * 获取通用题
+     * @return
+     */
+    @Query("select q.id from Question q where  q.questionCategory is null")
+    List<Integer> findAllNormalQUestion();
 
     /**
      * 搜索相关试题

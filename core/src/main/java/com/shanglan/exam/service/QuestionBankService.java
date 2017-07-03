@@ -86,11 +86,11 @@ public class QuestionBankService {
             question.setCorrectAnswer(String.valueOf(lo.get(3)));//正确答案
             question.setScore(Integer.parseInt(StringUtils.isEmpty(String.valueOf(lo.get(4)))?"1":String.valueOf(lo.get(4))));
             // TODO: 2017/6/24 这里需要确认，是否部门不存在时不录入并提醒
-//            if(null==questionCategoryRepository.findByName(String.valueOf(lo.get(5)))){
+            if(null==questionCategoryRepository.findByName(String.valueOf(lo.get(5)))){
 //                QuestionCategory questionCategory = new QuestionCategory();
 //                questionCategory.setName(String.valueOf(lo.get(5)));
 //                questionCategoryRepository.save(questionCategory);
-//            }
+            }
             question.setQuestionCategory(questionCategoryRepository.findByName(String.valueOf(lo.get(5))));
             question.setAddtime(LocalDateTime.now());
             questions.add(question);
@@ -234,23 +234,30 @@ public class QuestionBankService {
         long oneCount = questionBankRepository.countByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("单选题"), qci.getQuestionCategory().getId());
         long moreCount = questionBankRepository.countByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("多选题"), qci.getQuestionCategory().getId());
         long torfCount = questionBankRepository.countByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("判断题"), qci.getQuestionCategory().getId());
-        if (qci.getCountOfSingleChoice() > oneCount || qci.getCountOfMutipleChoice() > moreCount || qci.getCountOfTorF()>torfCount) {
+        long normalCount = questionBankRepository.countByNormal();
+        if (qci.getCountOfSingleChoice() > oneCount+normalCount || qci.getCountOfMutipleChoice() > moreCount+normalCount || qci.getCountOfTorF()>torfCount+normalCount) {
 //            throw new RuntimeException("数据错误，类目所需试题数大于类目总试题数");
             return AjaxResponse.fail("数据错误，类目所需试题数大于类目总试题数,请重新设置考试规则");
         }
 
+        //通用题
+        List<Integer> normalIds = questionBankRepository.findAllNormalQUestion();
+
         //随机出单选题
         List<Integer> questionId1 = questionBankRepository.findAllByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("单选题"), qci.getQuestionCategory().getId());
+        questionId1.addAll(normalIds);
         List<Integer> oneIds = this.randomList(questionId1, qci.getCountOfSingleChoice());
         List<Question> singleChoiceList = questionBankRepository.findAll(oneIds);
 
         //随机出多选题
         List<Integer> questionId2 = questionBankRepository.findAllByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("多选题"), qci.getQuestionCategory().getId());
+        questionId2.addAll(normalIds);
         List<Integer> moreIds = this.randomList(questionId2, qci.getCountOfMutipleChoice());
         List<Question> mutipleChoiceList = questionBankRepository.findAll(moreIds);
 
         //随机出判断题
         List<Integer> questionId3 = questionBankRepository.findAllByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("判断题"), qci.getQuestionCategory().getId());
+        questionId3.addAll(normalIds);
         List<Integer> torfIds = this.randomList(questionId3, qci.getCountOfTorF());
         List<Question> torfList = questionBankRepository.findAll(torfIds);
 

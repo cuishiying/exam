@@ -71,7 +71,7 @@
                         </td>
                         <td th:text="${question.correctAnswer}">A</td>
                         <td th:text="${question.score}"></td>
-                        <td th:text="${question.questionCategory?.name}"></td>
+                        <td th:text="${question.questionCategory==null?'通用题':question.questionCategory.name}"></td>
 
                         <td>
                             <!--<a class="btn btn-sm btn-success detail" th:value="${question.id}" data-toggle="modal" data-target="#addModal">查看</a>-->
