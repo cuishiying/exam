@@ -55,7 +55,8 @@ public class QuestionBankController {
     public ModelAndView addQuestion(){
         ModelAndView model = new ModelAndView("question_add");
         List<QuestionType> questionTypes = questionTypeService.findAll();
-        List<QuestionCategory> questionCategories = questionCategoryService.findAll();
+        List<QuestionCategory> questionCategories = questionCategoryService.findAllAndNoemal();
+
         model.addObject("questionTypes",questionTypes);
         model.addObject("questionCategories",questionCategories);
 

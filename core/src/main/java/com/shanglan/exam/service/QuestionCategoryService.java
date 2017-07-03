@@ -41,5 +41,13 @@ public class QuestionCategoryService {
         return all;
     }
 
+    public List<QuestionCategory> findAllAndNoemal(){
+        List<QuestionCategory> all = questionCategoryRepository.findAll();
+        QuestionCategory questionCategory = new QuestionCategory();
+        questionCategory.setName("通用题");
+        all.add(questionCategory);
+        return all;
+    }
+
 
 }
