@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +46,7 @@ public class ExamController {
     public ModelAndView examPaper(String username,String truename,HttpServletRequest request){
 
         ModelAndView model = null;
+
         Integer uid = 0;
         if(StringUtils.isNotEmpty(username)&&StringUtils.isNotEmpty(truename)){
             User user = userService.findUserByUsernameAndtruename(username, truename);
@@ -54,11 +57,35 @@ public class ExamController {
             uid = (Integer) request.getSession().getAttribute("uid");
         }
 
+
+        //防止考生刷卷
+        QuestionDTO exam_question = (QuestionDTO) request.getSession().getAttribute("exam_question");
+        if(null!=exam_question){
+
+            //计算考试剩余时间
+            LocalDateTime exam_start_time = (LocalDateTime) request.getSession().getAttribute("exam_start_time");
+            LocalDateTime exam_now_time = LocalDateTime.now();
+
+            long duration = Duration.between(exam_start_time, exam_now_time).toMinutes();
+
+            Integer examDuration = examinationService.examDuration(uid);
+
+            model = new ModelAndView("exam_question");
+            model.addObject("questions",exam_question);
+            model.addObject("examDuration",examDuration-duration);
+            return model;
+        }
+
         if(null==uid){
             model = new ModelAndView("redirect:/login");
         }else{
+            //第一次获取试题
             AjaxResponse ajaxResponse = examinationService.isAttending(uid);
             if(ajaxResponse.isSuccess()){
+
+                request.getSession().setAttribute("exam_question",ajaxResponse.getData());
+                request.getSession().setAttribute("exam_start_time", LocalDateTime.now());
+
                 model = new ModelAndView("exam_question");
                 model.addObject("questions",ajaxResponse.getData());
                 model.addObject("examDuration",(Integer)examinationService.examDuration(uid));
