@@ -26,6 +26,8 @@ public class User {
     private String qq;
     @Column(name="deptId")
     private Integer deptId;//所属部门
+    @ManyToOne(optional = false)
+    private QuestionCategory questionCategory;//部门
 
 
 
@@ -37,9 +39,6 @@ public class User {
     public void setUid(Integer uid) {
         this.uid = uid;
     }
-
-    @ManyToOne(optional = false)
-    private QuestionCategory questionCategory;//试题类目、工种
 
     public String getUsername() {
         return username;
