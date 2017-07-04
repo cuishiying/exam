@@ -120,7 +120,7 @@ public class ExamController {
     @RequestMapping(path = "/record",method = RequestMethod.GET)
     public ModelAndView index(@PageableDefault(value = 10,sort = "id",direction = Sort.Direction.DESC) Pageable pageable, HttpServletRequest request){
 
-        ModelAndView model = new ModelAndView("exam_record");
+        ModelAndView model = new ModelAndView("exam_record1");
         Integer uid = (Integer) request.getSession().getAttribute("uid");
         if(null!=uid){
             Page<ExamRecord> page = examinationService.findAll(uid,pageable);

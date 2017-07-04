@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>list</title>
+    <link rel="stylesheet" href="../../static/css/bootstrap.min.css">
+    <script src="../../static/js/jquery.min.js"></script>
+    <script src="../../static/js/bootstrap.min.js"></script>
+    <style type="text/css">
+        .row{
+            height: 40px;
+            background-color: #f7f7f9;
+            display: flex;
+            justify-content:center;
+            align-items:Center;
+            border-bottom: 1px solid #bbbbbb;
+        }
+        .row img{
+            height: 20px;
+        }
+
+    </style>
+</head>
+<body>
+<nav th:replace="common/fragment :: nav-header"></nav>
+
+<div class="container-fluid" style="margin-top: 50px">
+    <div>
+        <div class="row">
+
+            <div class="col-xs-6">考试时间</div>
+            <div class="col-xs-3">得分</div>
+            <div class="col-xs-3">是否及格</div>
+
+        </div>
+        <div class="row"  th:each="recore:${page.content}">
+
+            <div class="col-xs-6" th:text="${recore.examTime}">content</div>
+            <div class="col-xs-3" th:text="${recore.score}">content</div>
+            <div class="col-xs-3" th:text="${recore.pass?'是':'否'}">content</div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    var ctx = /*[[@{/}]]*/;
+</script>
+</body>
+</html>
