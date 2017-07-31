@@ -83,6 +83,8 @@ public class TestPaperRulesService {
                     item.setEffectiveStartDate(LocalTime.now());
                     item.setEffectiveEndDate(LocalTime.now());
                     rules.add(item);
+                }else{
+                    testPaperRuleRepository.delete(category.getId());
                 }
             });
             testPaperRuleRepository.save(rules);

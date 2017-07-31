@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * Created by cuishiying on 2017/6/15.
- * 试题类目（部门）
+ * 部门
  */
 @Entity
 @Table(name = "cnoa_main_struct")

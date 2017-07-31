@@ -35,7 +35,7 @@ public class TestPaperRuleController {
     @RequestMapping
     public ModelAndView testPaperRuleView(){
         ModelAndView model = new ModelAndView("testpaper_rule");
-        List<TestPaperRule> rules = testPaperRulesService.findAll();
+        List<TestPaperRule> rules = testPaperRulesService.findAll();//考卷规则
         List<TestPaperType> paperTypes = testPaperTypeService.findAll();
         model.addObject("rules",rules);
         model.addObject("paperTypes",paperTypes);

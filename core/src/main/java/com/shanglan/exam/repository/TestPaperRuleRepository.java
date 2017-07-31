@@ -16,6 +16,7 @@ public interface TestPaperRuleRepository extends JpaRepository<TestPaperRule, In
     @Query("select t from TestPaperRule t where t.questionCategory.id=?1")
     TestPaperRule findByQuestionCategory(Integer questionCategoryId);
 
+
     TestPaperRule findByQuestionCategory(QuestionCategory questionCategory);
 
     List<TestPaperRule> findAll();

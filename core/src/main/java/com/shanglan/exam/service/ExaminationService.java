@@ -11,6 +11,7 @@ import com.shanglan.exam.repository.TestPaperRuleRepository;
 import com.shanglan.exam.repository.UserRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -46,6 +47,9 @@ public class ExaminationService {
     private ExaminationRepository examinationRepository;
     @Autowired
     private QuestionCategoryService questionCategoryService;
+
+    @Autowired
+    private Environment env;
 
     /**
      * 用户是否有正在进行的考试
@@ -150,6 +154,7 @@ public class ExaminationService {
      * @return
      */
     public AjaxResponse calculationScore(Integer uid,List<UserAnswers> userAnswers){
+        String split = env.getProperty("excel.import.split");
 
         User user = userService.findByUid(uid);
 
@@ -163,7 +168,7 @@ public class ExaminationService {
         for(UserAnswers ua:userAnswers){
             Question qt = questionBankService.findById(ua.getQuestionId());
             totalScore+=qt.getScore();
-            List<String> correctAnswerList = Arrays.asList(qt.getCorrectAnswer().split(";"));//正确答案
+            List<String> correctAnswerList = Arrays.asList(qt.getCorrectAnswer().split(","));//正确答案
             List<String> userAnswer = ua.getUserAnswer();
             for(String u:userAnswer){
                 if(!correctAnswerList.contains(u)||userAnswer.size()!=correctAnswerList.size()){
