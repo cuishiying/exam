@@ -154,7 +154,7 @@ public class ExaminationService {
      * @return
      */
     public AjaxResponse calculationScore(Integer uid,List<UserAnswers> userAnswers){
-        String split = env.getProperty("excel.import.split");
+        String split = env.getProperty("excel.add.split");
 
         User user = userService.findByUid(uid);
 
@@ -168,7 +168,7 @@ public class ExaminationService {
         for(UserAnswers ua:userAnswers){
             Question qt = questionBankService.findById(ua.getQuestionId());
             totalScore+=qt.getScore();
-            List<String> correctAnswerList = Arrays.asList(qt.getCorrectAnswer().split(","));//正确答案
+            List<String> correctAnswerList = Arrays.asList(qt.getCorrectAnswer().split(split));//正确答案
             List<String> userAnswer = ua.getUserAnswer();
             for(String u:userAnswer){
                 if(!correctAnswerList.contains(u)||userAnswer.size()!=correctAnswerList.size()){
