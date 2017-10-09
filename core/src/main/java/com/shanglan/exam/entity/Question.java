@@ -11,6 +11,7 @@ import java.util.List;
  * 试题
  */
 @Entity
+@Table(name = "cnoa_test_question")
 public class Question extends BaseEntity{
     private static final long serialVersionUID = -8878544828516170631L;
 
@@ -21,7 +22,7 @@ public class Question extends BaseEntity{
     private String title;//题目
     @OneToMany(fetch= FetchType.EAGER, cascade= CascadeType.ALL, orphanRemoval=true)
     private List<Answer> answers;//答案
-    private int score;//分值
+    private Float score;//分值
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private QuestionCategory questionCategory;//试题类目
     private LocalDateTime addtime;//添加时间
@@ -59,11 +60,11 @@ public class Question extends BaseEntity{
         this.answers = answers;
     }
 
-    public int getScore() {
+    public Float getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(Float score) {
         this.score = score;
     }
 

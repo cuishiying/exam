@@ -3,6 +3,7 @@ package com.shanglan.exam.entity;
 import com.shanglan.exam.base.BaseEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 /**
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
  * 试卷类型（每日一考、试卷、练习）
  */
 @Entity
+@Table(name = "cnoa_test_papertype")
 public class TestPaperType extends BaseEntity{
 
     private static final long serialVersionUID = -8771391100100509322L;

@@ -4,6 +4,7 @@ import com.shanglan.exam.base.AjaxResponse;
 import com.shanglan.exam.base.ExcelUtils;
 import com.shanglan.exam.dto.QueryDTO;
 import com.shanglan.exam.dto.QuestionDTO;
+import com.shanglan.exam.dto.QuestionModel;
 import com.shanglan.exam.entity.*;
 import com.shanglan.exam.repository.QuestionBankRepository;
 import com.shanglan.exam.repository.QuestionCategoryRepository;
@@ -22,12 +23,10 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.criteria.Predicate;
+import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by cuishiying on 2017/6/13.
@@ -84,7 +83,7 @@ public class QuestionBankService {
             }
             question.setAnswers(handleAnswer(String.valueOf(lo.get(2)),String.valueOf(lo.get(3))));//答案选项
             question.setCorrectAnswer(String.valueOf(lo.get(3)));//正确答案
-            question.setScore(Integer.parseInt(StringUtils.isEmpty(String.valueOf(lo.get(4)))?"1":String.valueOf(lo.get(4))));
+            question.setScore(Float.parseFloat(StringUtils.isEmpty(String.valueOf(lo.get(4)))?"1":String.valueOf(lo.get(4))));
             // TODO: 2017/6/24 这里需要确认，是否部门不存在时不录入并提醒
             if(null==questionCategoryRepository.findByName(String.valueOf(lo.get(5)))){
 //                QuestionCategory questionCategory = new QuestionCategory();
@@ -97,6 +96,32 @@ public class QuestionBankService {
         }
         questionBankRepository.save(questions);
         return AjaxResponse.success();
+    }
+
+    /**
+     * 导出试题模板
+     * @param response
+     */
+    public void exportQuestions(HttpServletResponse response){
+        String fileName = "试题模板";
+        String sheetName = "试题模板";
+        List<QuestionModel> list = new ArrayList<>();
+        QuestionModel question = new QuestionModel();
+        question.setTitle("危险是指系统发生不期望后果的可能性超过了_   __。");
+        question.setQuestionType("多选题");
+        question.setAnswers("A安全性要求$B可预防的范围$C人们的承受程度");
+        question.setCorrectAnswer("B,C");
+        question.setScore(Float.parseFloat("1"));
+        question.setQuestionCategory("安全监察科");
+        list.add(question);
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        map.put("题目","title");
+        map.put("题型","questionType");
+        map.put("选项","answers");
+        map.put("答案","correctAnswer");
+        map.put("分值","score");
+        map.put("部门","questionCategory");
+        ExcelUtils.export(fileName,sheetName,QuestionModel.class,list,map,response);
     }
 
     /**
@@ -241,23 +266,25 @@ public class QuestionBankService {
         }
 
         //通用题
-        List<Integer> normalIds = questionBankRepository.findAllNormalQUestion();
+        List<Integer> normalIds1 = questionBankRepository.findAllNormalQUestion(questionTypeRepository.findByValue("单选题"));
+        List<Integer> normalIds2 = questionBankRepository.findAllNormalQUestion(questionTypeRepository.findByValue("多选题"));
+        List<Integer> normalIds3 = questionBankRepository.findAllNormalQUestion(questionTypeRepository.findByValue("判断题"));
 
         //随机出单选题
         List<Integer> questionId1 = questionBankRepository.findAllByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("单选题"), qci.getQuestionCategory().getId());
-        questionId1.addAll(normalIds);
+        questionId1.addAll(normalIds1);
         List<Integer> oneIds = this.randomList(questionId1, qci.getCountOfSingleChoice());
         List<Question> singleChoiceList = questionBankRepository.findAll(oneIds);
 
         //随机出多选题
         List<Integer> questionId2 = questionBankRepository.findAllByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("多选题"), qci.getQuestionCategory().getId());
-        questionId2.addAll(normalIds);
+        questionId2.addAll(normalIds2);
         List<Integer> moreIds = this.randomList(questionId2, qci.getCountOfMutipleChoice());
         List<Question> mutipleChoiceList = questionBankRepository.findAll(moreIds);
 
         //随机出判断题
         List<Integer> questionId3 = questionBankRepository.findAllByQuestionTypeAndQuestionCategory(questionTypeRepository.findByValue("判断题"), qci.getQuestionCategory().getId());
-        questionId3.addAll(normalIds);
+        questionId3.addAll(normalIds3);
         List<Integer> torfIds = this.randomList(questionId3, qci.getCountOfTorF());
         List<Question> torfList = questionBankRepository.findAll(torfIds);
 

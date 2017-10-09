@@ -61,60 +61,36 @@ public class TestPaperRulesService {
         List<TestPaperRule> rules = testPaperRuleRepository.findAll();
         List<QuestionCategory> categoryList = questionCategoryRepository.findAll();
 
-        if(testPaperTypeRepository.findAll().size()==0){
+        if(rules.size()==0){
             TestPaperType tpt = new TestPaperType();
             tpt.setName("每日一考");
             testPaperTypeRepository.save(tpt);
-        }
 
-        categoryList.forEach(e->{
-            TestPaperRule category = testPaperRuleRepository.findByQuestionCategory(e.getId());
-            if(e.getFid()!=0&&e.getFid()!=1){
-                if(null==category){
-                    TestPaperRule item = new TestPaperRule();
-                    // TODO: 2017/6/24 table确定后看是否是第一个
-                    item.setTestPaperType(testPaperTypeRepository.findAll().get(0));
-                    item.setQuestionCategory(e);
-                    item.setCountOfMutipleChoice(0);
-                    item.setCountOfSingleChoice(0);
-                    item.setCountOfTorF(0);
-                    item.setPassScore(60);
-                    item.setExamDuration(60);
-                    item.setEffectiveStartDate(LocalTime.now());
-                    item.setEffectiveEndDate(LocalTime.now());
-                    rules.add(item);
-                }else{
-                    //空处理
+            TestPaperType one = testPaperTypeRepository.findOne(1);
+
+            categoryList.forEach(e->{
+                TestPaperRule item = new TestPaperRule();
+                // TODO: 2017/6/24 table确定后看是否是第一个
+                item.setTestPaperType(one);
+                item.setQuestionCategory(e);
+                item.setCountOfMutipleChoice(0);
+                item.setCountOfSingleChoice(0);
+                item.setCountOfTorF(0);
+                item.setPassScore(60);
+                item.setExamDuration(60);
+                item.setEffectiveStartDate(LocalTime.now());
+                item.setEffectiveEndDate(LocalTime.now());
+                rules.add(item);
+            });
+            testPaperRuleRepository.save(rules);
+        }else{
+            rules.forEach(e->{
+                if(e.getEffectiveStartDate()==null){
+                    e.setEffectiveStartDate(LocalTime.now());
+                    e.setEffectiveEndDate(LocalTime.now());
                 }
-            }else{
-                testPaperRuleRepository.delete(category.getId());
-            }
-
-        });
-        testPaperRuleRepository.save(rules);
-
-//        if(rules.size()<categoryList.size()){
-//            categoryList.forEach(e->{
-//                TestPaperRule category = testPaperRuleRepository.findByQuestionCategory(e.getId());
-//                if(null==category&&e.getFid()!=0&&e.getFid()!=1){
-//                    TestPaperRule item = new TestPaperRule();
-//                    // TODO: 2017/6/24 table确定后看是否是第一个
-//                    item.setTestPaperType(testPaperTypeRepository.findAll().get(0));
-//                    item.setQuestionCategory(e);
-//                    item.setCountOfMutipleChoice(0);
-//                    item.setCountOfSingleChoice(0);
-//                    item.setCountOfTorF(0);
-//                    item.setPassScore(60);
-//                    item.setExamDuration(60);
-//                    item.setEffectiveStartDate(LocalTime.now());
-//                    item.setEffectiveEndDate(LocalTime.now());
-//                    rules.add(item);
-//                }else{
-//                    testPaperRuleRepository.delete(category.getId());
-//                }
-//            });
-//            testPaperRuleRepository.save(rules);
-//        }
+            });
+        }
         return rules;
     }
 

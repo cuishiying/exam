@@ -11,7 +11,7 @@ import javax.persistence.Table;
  * 工种
  */
 @Entity
-@Table(name = "type_of_work")
+@Table(name = "cnoa_user_worktype")
 public class TypeOfWork extends BaseEntity{
 
 

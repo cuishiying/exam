@@ -45,8 +45,8 @@ public interface QuestionBankRepository extends JpaRepository<Question, Integer>
      * 获取通用题
      * @return
      */
-    @Query("select q.id from Question q where  q.questionCategory is null")
-    List<Integer> findAllNormalQUestion();
+    @Query("select q.id from Question q where  q.questionCategory is null and q.questionType =?1")
+    List<Integer> findAllNormalQUestion(QuestionType type);
 
     /**
      * 搜索相关试题

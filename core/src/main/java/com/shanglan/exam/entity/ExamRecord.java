@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
  * 成绩
  */
 @Entity
+@Table(name = "cnoa_test_record")
 public class ExamRecord extends BaseEntity {
 
     private static final long serialVersionUID = 522708612562745572L;

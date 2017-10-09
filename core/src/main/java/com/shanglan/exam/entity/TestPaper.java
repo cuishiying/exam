@@ -2,10 +2,7 @@ package com.shanglan.exam.entity;
 
 import com.shanglan.exam.base.BaseEntity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -14,6 +11,7 @@ import java.util.List;
  * 试卷//todo
  */
 @Entity
+@Table(name = "cnoa_test_paper")
 public class TestPaper extends BaseEntity {
     private static final long serialVersionUID = -5134520455541380101L;
 

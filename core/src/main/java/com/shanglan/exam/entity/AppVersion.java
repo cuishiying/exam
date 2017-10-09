@@ -5,12 +5,14 @@ import com.shanglan.exam.base.BaseEntity;
 import com.shanglan.exam.enums.AppType;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 /**
  * Created by cuishiying on 2017/7/4.
  */
 @Entity
+@Table(name = "cnoa_app_version")
 public class AppVersion extends BaseEntity{
     private static final long serialVersionUID = 2171675175489815965L;
 

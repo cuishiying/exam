@@ -9,20 +9,24 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static sun.net.www.protocol.http.HttpURLConnection.userAgent;
 
 /**
  * Created by cuishiying on 2017/6/13.
@@ -59,7 +63,7 @@ public class ExcelUtils {
                 //遍历所有的列
                 List<Object> li = new ArrayList<Object>();
                 for (int y = row.getFirstCellNum(); y < row.getLastCellNum(); y++) {
-                    cell = row.getCell(y);
+                    cell = row.getCell(y,Row.CREATE_NULL_AS_BLANK);
                     li.add(getCellValue(cell));
                 }
                 list.add(li);
@@ -86,7 +90,7 @@ public class ExcelUtils {
      */
     public static  Workbook getWorkbook(InputStream inStr,String fileName) throws Exception{
         Workbook wb = null;
-        String fileType = fileName.substring(fileName.lastIndexOf("."));
+        String fileType = fileName.substring(fileName.lastIndexOf(".")).toLowerCase();
         if(excel2003L.equals(fileType)){
             wb = new HSSFWorkbook(inStr);  //2003-
         }else if(excel2007U.equals(fileType)){
@@ -132,10 +136,58 @@ public class ExcelUtils {
         }
         return value;
     }
-    /****************************************上传结束***************************************
-     /**
-     * 多列头创建EXCEL
+    /****************************************上传结束,导出Excel表开始***************************************/
+
+
+    /**
      *
+     * @param fileName 导出excel名字
+     * @param sheetName 表名
+     * @param clazz 导出数据实体类
+     * @param objs  导出数据列表
+     * @param map 表头名称与实体类字段映射关系
+     * @param response
+     */
+    public static void export(String fileName,String sheetName,Class clazz, List objs,LinkedHashMap<String,String> map,HttpServletResponse response){
+        try {
+            if(org.apache.commons.lang.StringUtils.contains(userAgent, "Firefox") || org.apache.commons.lang.StringUtils.contains(userAgent, "firefox")){//火狐浏览器
+                fileName = new String(fileName.getBytes(), "ISO8859-1");
+            }else{
+                fileName = URLEncoder.encode(fileName,"UTF-8");//其他浏览器
+            }
+
+
+            // 指定下载的文件名
+            response.setHeader("Content-Disposition", "attachment;filename=" + fileName + ".xlsx");
+            response.setContentType("application/vnd.ms-excel;charset=UTF-8");
+            response.setHeader("Pragma", "no-cache");
+            response.setHeader("Cache-Control", "no-cache");
+            response.setDateHeader("Expires", 0);
+
+            List<ExcelBean> excel = new ArrayList<ExcelBean>();
+            Map<Integer, List<ExcelBean>> mapExcel = new LinkedHashMap<Integer, List<ExcelBean>>();
+            XSSFWorkbook xssfWorkbook = null;
+            //设置标题栏
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                excel.add(new ExcelBean(entry.getKey(), entry.getValue(), 0));
+            }
+            mapExcel.put(0, excel);
+            xssfWorkbook = ExcelUtils.createExcelFile(clazz, objs, mapExcel, sheetName);
+            OutputStream output;
+            try {
+                output = response.getOutputStream();
+                BufferedOutputStream bufferedOutPut = new BufferedOutputStream(output);
+                bufferedOutPut.flush();
+                xssfWorkbook.write(bufferedOutPut);
+                bufferedOutPut.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+     /**
      * @param sheetName 工作簿名称
      * @param clazz  数据源model类型
      * @param objs   excel标题列以及对应model字段名

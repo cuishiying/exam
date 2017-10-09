@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.util.List;
 
@@ -109,6 +110,13 @@ public class QuestionBankController {
         InputStream in = file.getInputStream();
         AjaxResponse ajaxResponse = questionBankService.importExcel(in, file);
         return ajaxResponse;
+    }
+
+    @RequestMapping(path = "/export",method = RequestMethod.GET)
+    public AjaxResponse exportGoods(HttpServletRequest request, HttpServletResponse response) {
+        response.reset(); //清除buffer缓存
+        questionBankService.exportQuestions(response);
+        return AjaxResponse.success();
     }
 
 

@@ -13,6 +13,7 @@ import java.time.LocalTime;
  *
  */
 @Entity
+@Table(name = "cnoa_test_paperrule")
 public class TestPaperRule extends BaseEntity {
 
 	private static final long serialVersionUID = 1L;

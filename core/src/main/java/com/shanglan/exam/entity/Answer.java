@@ -3,11 +3,13 @@ package com.shanglan.exam.entity;
 import com.shanglan.exam.base.BaseEntity;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * Created by cuishiying on 2017/6/13.
  */
 @Entity
+@Table(name = "cnoa_test_answer")
 public class Answer extends BaseEntity{
 
 

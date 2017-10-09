@@ -45,9 +45,10 @@
             <div class="table-responsive">
                 <a class="btn btn-primary add" th:href="@{/question/add}">新增</a>
                 <button type="button" class="btn btn-success import">导入</button>
-                <form id="uploadForm" enctype="multipart/form-data" method="post">
+                <form id="uploadForm" enctype="multipart/form-data" method="post" style="display: inline">
                     <input id="upfile" type="file" name="upfile" style="display: none">
                 </form>
+                <a class="btn btn-primary export" th:href="@{/question/export}">导出模板</a>
                 <table class="table table-striped">
                     <thead>
                     <tr>

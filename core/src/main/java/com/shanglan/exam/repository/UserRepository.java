@@ -2,6 +2,7 @@ package com.shanglan.exam.repository;
 
 import com.shanglan.exam.entity.TestPaperType;
 import com.shanglan.exam.entity.User;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -25,18 +26,22 @@ public class UserRepository{
 
     public User findUserByUsernameAndtruename(String username, String truename){
         String sql="select * from cnoa_main_user u where u.username=? and u.truename=?";
-
-        User user = jdbcTemplate.queryForObject(sql, new Object[]{username, truename}, new RowMapper<User>() {
-            @Override
-            public User mapRow(ResultSet resultSet, int i) throws SQLException {
-                User u = new User();
-                u.setDeptId(resultSet.getInt("deptId"));
-                u.setUid(resultSet.getInt("uid"));
-                u.setUsername(resultSet.getString("username"));
-                u.setTruename(resultSet.getString("truename"));
-                return u;
-            }
-        });
+        User user = null;
+        try{
+            user = jdbcTemplate.queryForObject(sql, new Object[]{username, truename}, new RowMapper<User>() {
+                @Override
+                public User mapRow(ResultSet resultSet, int i) throws SQLException {
+                    User u = new User();
+                    u.setDeptId(resultSet.getInt("deptId"));
+                    u.setUid(resultSet.getInt("uid"));
+                    u.setUsername(resultSet.getString("username"));
+                    u.setTruename(resultSet.getString("truename"));
+                    return u;
+                }
+            });
+        }catch (EmptyResultDataAccessException e){
+            return null;
+        }
         return user;
     }
 
