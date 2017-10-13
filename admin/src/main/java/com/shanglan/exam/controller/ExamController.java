@@ -82,6 +82,7 @@ public class ExamController {
     public AjaxResponse submitExamPage(@RequestBody List<UserAnswers> userAnswers, HttpServletRequest request) {
         Integer uid = (Integer) request.getSession().getAttribute("uid");
         AjaxResponse result = examinationService.validateExam(uid,userAnswers);
+//        request.getSession().removeAttribute("exam_question");
         return result;
     }
 
