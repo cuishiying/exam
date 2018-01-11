@@ -170,11 +170,15 @@ public class ExaminationService {
             totalScore+=qt.getScore();
             List<String> correctAnswerList = Arrays.asList(qt.getCorrectAnswer().split(split));//正确答案
             List<String> userAnswer = ua.getUserAnswer();
-            for(String u:userAnswer){
-                if(!correctAnswerList.contains(u)||userAnswer.size()!=correctAnswerList.size()){
-                    errScore+=qt.getScore();
-                    errAnswers.add(ua);
-                    break;
+            if(userAnswer.isEmpty()){
+                errScore+=qt.getScore();
+            }else{
+                for(String u:userAnswer){
+                    if(!correctAnswerList.contains(u)||userAnswer.size()!=correctAnswerList.size()){
+                        errScore+=qt.getScore();
+                        errAnswers.add(ua);
+                        break;
+                    }
                 }
             }
         }
